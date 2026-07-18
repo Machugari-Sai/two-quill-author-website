@@ -30,6 +30,7 @@ const emailAddress = 'trinath.reddy.106@gmail.com'
 const instagramUrl = 'https://www.instagram.com/two_quill_stories/'
 const sakInstagramUrl = 'https://www.instagram.com/sak.universe/'
 const siteUrl = 'https://twoquillstories.com'
+const sakWebsiteUrl = 'https://two-quill-author-website.vercel.app/SAK_WEBSITE/index.html'
 
 const philosophyText =
   'I believe every emotion carries a story worth telling. Through my writing, I hope to explore friendship, love, personal growth, and the moments that quietly shape who we become. My goal is not just to tell stories, but to create experiences that stay with readers long after the final page.'
@@ -369,7 +370,7 @@ function Navigation() {
           </NavLink>
           <a
             className="nav-link sak-nexus-link"
-            href="/SAK_WEBSITE/index.html"
+            href={sakWebsiteUrl}
           >
             THE SAK NEXUS
           </a>
@@ -390,7 +391,7 @@ function Navigation() {
         </NavLink>
         <a
           className="nav-link sak-nexus-link whitespace-nowrap"
-          href="/SAK_WEBSITE/index.html"
+          href={sakWebsiteUrl}
         >
           THE SAK NEXUS
         </a>

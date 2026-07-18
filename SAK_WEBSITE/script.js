@@ -1097,6 +1097,6 @@ document.querySelectorAll("img").forEach((image) => {
   image.addEventListener("error", () => image.classList.remove("sak-image-loading"), { once: true });
 });
 document.querySelectorAll(".brand").forEach((brand) => {
-  brand.href = "https://twoquillstories.com/";
+  brand.href = "https://two-quill-author-website.vercel.app/";
   brand.setAttribute("aria-label", "Back to Two Quill Stories");
 });

@@ -19,7 +19,7 @@ const themeOptions = document.querySelector("[data-theme-options]");
 const settingsStatus = document.querySelector("[data-settings-status]");
 
 document.querySelectorAll(".brand").forEach((brand) => {
-  brand.href = "https://twoquillstories.com/";
+  brand.href = "https://two-quill-author-website.vercel.app/";
   brand.setAttribute("aria-label", "Back to Two Quill Stories");
 });
 
