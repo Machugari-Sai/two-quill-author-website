@@ -369,7 +369,7 @@ function Navigation() {
           </NavLink>
           <a
             className="nav-link sak-nexus-link"
-            href="http://127.0.0.1:8010/"
+            href="/SAK_WEBSITE/index.html"
           >
             THE SAK NEXUS
           </a>
@@ -390,7 +390,7 @@ function Navigation() {
         </NavLink>
         <a
           className="nav-link sak-nexus-link whitespace-nowrap"
-          href="http://127.0.0.1:8010/"
+          href="/SAK_WEBSITE/index.html"
         >
           THE SAK NEXUS
         </a>
