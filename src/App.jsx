@@ -153,7 +153,7 @@ function pageTitle(book) {
 
 function routeTitle(pathname) {
   if (pathname === '/books') return 'Library | Two Quill Stories'
-  if (pathname === '/novels') return 'SAK NOVELS | Two Quill Stories'
+  if (pathname === '/novels') return 'THE SAK NEXUS | Two Quill Stories'
   if (pathname === '/author') {
     return 'About Author | Machugari Yashwanth Reddy'
   }
@@ -169,7 +169,7 @@ function routeDescription(pathname) {
     return 'Explore the official published book library by Machugari Yashwanth Reddy.'
   }
   if (pathname === '/novels') {
-    return 'Explore the SAK novels from Two Quill Stories.'
+    return 'Explore THE SAK NEXUS from Two Quill Stories.'
   }
   if (pathname === '/author') {
     return 'Meet Machugari Yashwanth Reddy, Indian author, B.Tech student, and founder of Two Quill Stories.'
@@ -345,11 +345,6 @@ function SectionHeading({ eyebrow, title, subtitle, align = 'left' }) {
 }
 
 function Navigation() {
-  const location = useLocation()
-  const isNovelArea =
-    location.pathname === '/novels' ||
-    location.pathname.startsWith('/novels/') ||
-    location.pathname === '/books/sak-the-beginning'
   const linkClass = ({ isActive }) =>
     `nav-link ${isActive ? 'is-active text-sky-800' : 'text-slate-600'}`
 
@@ -372,14 +367,12 @@ function Navigation() {
           <NavLink className={linkClass} end to="/books">
             Library
           </NavLink>
-          <NavLink
-            className={(state) =>
-              linkClass({ ...state, isActive: state.isActive || isNovelArea })
-            }
-            to="/novels"
+          <a
+            className="nav-link sak-nexus-link"
+            href="http://127.0.0.1:8010/"
           >
-            Novels
-          </NavLink>
+            THE SAK NEXUS
+          </a>
           <NavLink className={linkClass} to="/author">
             About Author
           </NavLink>
@@ -395,14 +388,12 @@ function Navigation() {
         <NavLink className={(state) => `${linkClass(state)} whitespace-nowrap`} end to="/books">
           Library
         </NavLink>
-        <NavLink
-          className={(state) =>
-            `${linkClass({ ...state, isActive: state.isActive || isNovelArea })} whitespace-nowrap`
-          }
-          to="/novels"
+        <a
+          className="nav-link sak-nexus-link whitespace-nowrap"
+          href="http://127.0.0.1:8010/"
         >
-          Novels
-        </NavLink>
+          THE SAK NEXUS
+        </a>
         <NavLink className={(state) => `${linkClass(state)} whitespace-nowrap`} to="/author">
           About Author
         </NavLink>
@@ -910,35 +901,12 @@ function NovelCoverPair({ book, compact = false }) {
   )
 }
 
-function NovelFrontCover({ book }) {
-  return (
-    <motion.div
-      className="novel-front-cover"
-      initial={{ opacity: 0, y: 28, rotateX: 8 }}
-      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-      viewport={{ once: true, amount: 0.25 }}
-      whileHover={{ y: -10, rotateX: 2, rotateY: -5, scale: 1.018 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-    >
-      <div className="novel-cover-shell">
-        <img
-          alt={`${book.title} front cover`}
-          className="novel-cover-image"
-          decoding="async"
-          loading="eager"
-          src={book.front}
-        />
-      </div>
-    </motion.div>
-  )
-}
-
 function NovelBuyActions({ book, includeEnter = false }) {
   return (
     <div className="flex flex-wrap gap-3">
       {includeEnter ? (
         <Link className="novel-btn novel-btn-primary" to={book.path}>
-          Enter Novel
+          Enter THE SAK NEXUS
           <FiArrowRight aria-hidden="true" />
         </Link>
       ) : null}
@@ -959,90 +927,9 @@ function NovelBuyActions({ book, includeEnter = false }) {
 }
 
 function NovelsPage() {
-  const [sakBook] = novelBooks
-
   return (
     <PageTransition>
-      <div className="novel-world" onPointerMove={updateNovelPointer}>
-        <section className="novel-hero novel-depth-stage">
-          <NovelAtmosphere />
-          <motion.div
-            animate="visible"
-            className="novel-hero-content relative z-10 mx-auto max-w-5xl text-center"
-            initial="hidden"
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            variants={fadeUp}
-          >
-            <p className="novel-kicker">Two Quill Stories presents</p>
-            <h1 className="novel-hero-title">
-              <span>Welcome to</span>
-              <strong>SAK Universe</strong>
-            </h1>
-            <p className="novel-hero-copy">
-              You can find SAK Universe novels here.
-            </p>
-          </motion.div>
-        </section>
-
-        <section className="novel-section novel-depth-stage">
-          <NovelAtmosphere />
-          <div className="relative z-10 mx-auto max-w-7xl">
-            <motion.div
-              className="novel-layer-forward max-w-3xl"
-              initial="hidden"
-              transition={{ duration: 0.7 }}
-              variants={fadeUp}
-              viewport={{ once: true, amount: 0.3 }}
-              whileInView="visible"
-            >
-              <p className="novel-kicker">Novel Showcase</p>
-              <h2 className="novel-section-title">SAK: THE BEGINNING</h2>
-            </motion.div>
-
-            <motion.article
-              className="novel-showcase-card mt-12"
-              initial="hidden"
-              transition={{ duration: 0.7, delay: 0.08 }}
-              variants={fadeUp}
-              viewport={{ once: true, amount: 0.2 }}
-              whileInView="visible"
-            >
-              <Link className="block rounded-lg outline-none focus-visible:ring-4 focus-visible:ring-amber-300/50" to={sakBook.path}>
-                <NovelFrontCover book={sakBook} />
-              </Link>
-              <div className="novel-card-copy flex flex-col justify-center">
-                {sakBook.status ? (
-                  <span className="novel-status">{sakBook.status}</span>
-                ) : null}
-                <p className="novel-genre">{sakBook.genre}</p>
-                <h3 className="mt-4 font-serif text-4xl leading-tight text-[#fff7d7] sm:text-5xl">
-                  {sakBook.title}
-                </h3>
-                <p className="mt-5 max-w-2xl text-lg leading-8 text-[#d8c898]">
-                  {sakBook.description}
-                </p>
-                <div className="mt-8">
-                  <NovelBuyActions book={sakBook} includeEnter />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.div
-              className="novel-coming-soon mt-10"
-              initial="hidden"
-              transition={{ duration: 0.65 }}
-              variants={fadeUp}
-              viewport={{ once: true, amount: 0.35 }}
-              whileInView="visible"
-            >
-              More SAK Universe novels will be added here soon.
-            </motion.div>
-          </div>
-        </section>
-        <footer className="novel-footer">
-          <p>Two Quill Stories</p>
-        </footer>
-      </div>
+      <main aria-label="THE SAK NEXUS" className="min-h-screen bg-white" />
     </PageTransition>
   )
 }
@@ -1066,7 +953,7 @@ function NovelBookPage({ book }) {
               <div className="mb-8 flex flex-wrap gap-3">
                 <Link className="novel-back-link" to="/novels">
                   <FiArrowLeft aria-hidden="true" />
-                  Back to Novels
+                  Back to THE SAK NEXUS
                 </Link>
                 <Link className="novel-back-link" to="/books">
                   <FiArrowLeft aria-hidden="true" />
@@ -1199,7 +1086,7 @@ function NovelBookPage({ book }) {
               </article>
             ) : (
               <div className="novel-coming-soon mt-8">
-                More SAK Universe novels will be added here soon.
+                More SAK Universe stories will be added here soon.
               </div>
             )}
           </div>
@@ -1750,7 +1637,7 @@ function BookPage() {
   const relatedCollection = isNovel ? novelBooks : publishedBooks
   const related = relatedCollection.find((item) => item.id !== book.id)
   const backPath = isNovel ? '/novels' : '/books'
-  const backLabel = isNovel ? 'Back to SAK NOVELS' : 'Back to Library'
+  const backLabel = isNovel ? 'Back to THE SAK NEXUS' : 'Back to Library'
 
   const aboutThisBook = book.aboutThisBook || book.description
   const pageBackground = book.front

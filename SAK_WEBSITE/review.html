@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Review | SAK Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="inner-site review-site">
+    <div class="space-bg" aria-hidden="true"><div class="stars stars-a"></div><div class="stars stars-b"></div><div class="planet-glow"></div><div class="grid-floor"></div></div>
+    <header class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">S</span><span>SAK <em>UNIVERSE</em></span></a><nav class="nav-links"><a href="index.html">Home</a><a href="novels.html">Novels</a><a href="comics.html">Comics</a><a href="heroes.html">Superheroes</a><a href="profile.html">Profile</a><a href="settings.html">Settings</a></nav><div class="nav-actions"><a class="nav-cta active" href="review.html">Review</a><a class="nav-cta" href="contact.html">Contact</a></div></header>
+    <section class="review-section">
+      <a class="back-home" href="index.html">Back home</a>
+      <p class="eyebrow"><span></span> Website feedback</p>
+      <h1>Review SAK Universe</h1>
+      <p class="review-intro">Every user should review the website so the SAK Universe can keep improving.</p>
+      <form class="review-form" data-review-form>
+        <label>
+          <span>Your rating</span>
+          <select name="rating" required>
+            <option value="">Select rating</option>
+            <option value="5">5 - Legendary</option>
+            <option value="4">4 - Powerful</option>
+            <option value="3">3 - Good</option>
+            <option value="2">2 - Needs work</option>
+            <option value="1">1 - Rebuild needed</option>
+          </select>
+        </label>
+        <label>
+          <span>Your review</span>
+          <textarea name="review" required placeholder="Tell me how the website feels."></textarea>
+        </label>
+        <label>
+          <span>What changes do you want?</span>
+          <textarea name="changes" required placeholder="Write the improvements, pages, colors, or features you want."></textarea>
+        </label>
+        <button class="auth-submit" type="submit">Send review</button>
+        <p class="auth-status" data-auth-status></p>
+      </form>
+    </section>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Settings | SAK Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="inner-site settings-site">
+    <div class="space-bg" aria-hidden="true"><div class="stars stars-a"></div><div class="stars stars-b"></div><div class="planet-glow"></div><div class="grid-floor"></div></div>
+    <header class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">S</span><span>SAK <em>UNIVERSE</em></span></a><nav class="nav-links"><a href="index.html">Home</a><a href="novels.html">Novels</a><a href="comics.html">Comics</a><a href="heroes.html">Superheroes</a><a href="profile.html">Profile</a><a class="active" href="settings.html">Settings</a></nav><div class="nav-actions"><a class="nav-cta" href="review.html">Review</a><a class="nav-cta" href="contact.html">Contact</a></div></header>
+    <section class="settings-section">
+      <a class="back-home" href="index.html">Back home</a>
+      <div class="settings-hero">
+        <div>
+          <p class="eyebrow"><span></span> Control room</p>
+          <h1>Settings</h1>
+          <p>Command the look and account access of the SAK Universe from one royal dashboard.</p>
+        </div>
+        <div class="settings-command">
+          <span>SAK Nexus</span>
+          <strong>Online</strong>
+          <small>Theme engine active</small>
+        </div>
+      </div>
+      <div class="settings-grid">
+        <article class="settings-card theme-card">
+          <div class="settings-card-head">
+            <div>
+              <span>Royal theme</span>
+              <h2>Website Color</h2>
+              <p>Choose a royal color style for the full website.</p>
+            </div>
+            <div class="theme-preview" aria-hidden="true"><i></i><b></b><em></em></div>
+          </div>
+          <div class="settings-meter" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+          <div class="theme-options" data-theme-options>
+            <button type="button" data-theme="royal-blue"><i style="background:#123c9f"></i>Royal Blue</button>
+            <button type="button" data-theme="imperial-purple"><i style="background:#6d28d9"></i>Imperial Purple</button>
+            <button type="button" data-theme="emerald-crown"><i style="background:#047857"></i>Emerald Crown</button>
+            <button type="button" data-theme="crimson-king"><i style="background:#b91c1c"></i>Crimson King</button>
+            <button type="button" data-theme="sapphire-gold"><i style="background:#075985"></i>Sapphire Gold</button>
+            <button type="button" data-theme="ruby-throne"><i style="background:#be123c"></i>Ruby Throne</button>
+            <button type="button" data-theme="garnet-crown"><i style="background:#9f1239"></i>Garnet Crown</button>
+            <button type="button" data-theme="sunset-royal"><i style="background:#c2410c"></i>Sunset Royal</button>
+            <button type="button" data-theme="amber-palace"><i style="background:#b45309"></i>Amber Palace</button>
+            <button type="button" data-theme="gold-emperor"><i style="background:#a16207"></i>Gold Emperor</button>
+            <button type="button" data-theme="lime-regent"><i style="background:#4d7c0f"></i>Lime Regent</button>
+            <button type="button" data-theme="jade-kingdom"><i style="background:#15803d"></i>Jade Kingdom</button>
+            <button type="button" data-theme="teal-monarch"><i style="background:#0f766e"></i>Teal Monarch</button>
+            <button type="button" data-theme="cyan-crown"><i style="background:#0891b2"></i>Cyan Crown</button>
+            <button type="button" data-theme="azure-palace"><i style="background:#0369a1"></i>Azure Palace</button>
+            <button type="button" data-theme="indigo-royal"><i style="background:#4338ca"></i>Indigo Royal</button>
+            <button type="button" data-theme="violet-majesty"><i style="background:#7e22ce"></i>Violet Majesty</button>
+            <button type="button" data-theme="magenta-queen"><i style="background:#c026d3"></i>Magenta Queen</button>
+            <button type="button" data-theme="rose-palace"><i style="background:#e11d48"></i>Rose Palace</button>
+            <button type="button" data-theme="pearl-crown"><i style="background:#64748b"></i>Pearl Crown</button>
+          </div>
+          <p class="settings-status" data-settings-status></p>
+        </article>
+        <article class="settings-card logout-card">
+          <div class="account-orb" aria-hidden="true">S</div>
+          <span>User account</span>
+          <h2>Account Access</h2>
+          <p>Secure your session when you finish exploring the SAK Universe.</p>
+          <div class="settings-list">
+            <div><small>Status</small><strong>Logged in</strong></div>
+            <div><small>Access</small><strong>Member archive</strong></div>
+            <div><small>Return</small><strong>Login page</strong></div>
+          </div>
+          <a class="settings-logout" href="/logout">Logout</a>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>

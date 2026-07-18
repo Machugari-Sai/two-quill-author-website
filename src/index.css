@@ -90,6 +90,11 @@ a {
   transform: scaleX(1);
 }
 
+.sak-nexus-link,
+.sak-nexus-link:hover {
+  color: #b8860b !important;
+}
+
 .btn {
   align-items: center;
   border-radius: 0.5rem;

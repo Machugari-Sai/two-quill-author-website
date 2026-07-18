@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1400" role="img" aria-labelledby="title desc">
+  <title id="title">SAK The Beginning back cover</title>
+  <desc id="desc">Back cover text panel for SAK The Beginning with ornate gold border.</desc>
+  <defs>
+    <radialGradient id="paper" cx="50%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#ead4b4"/>
+      <stop offset=".55" stop-color="#a68e70"/>
+      <stop offset=".82" stop-color="#3c342b"/>
+      <stop offset="1" stop-color="#11100e"/>
+    </radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="900" height="1400" fill="url(#paper)"/>
+  <rect x="18" y="18" width="864" height="1364" fill="none" stroke="#c77b22" stroke-width="3"/>
+  <rect x="36" y="36" width="828" height="1328" fill="none" stroke="#9b611f" stroke-width="1.6"/>
+  <g opacity=".25" stroke="#15110d" stroke-width="3" fill="none">
+    <path d="M60 155 C145 80 214 108 266 40"/>
+    <path d="M840 155 C755 80 686 108 634 40"/>
+    <path d="M60 1245 C145 1320 214 1292 266 1360"/>
+    <path d="M840 1245 C755 1320 686 1292 634 1360"/>
+  </g>
+  <g font-family="Cinzel, Georgia, serif" text-anchor="middle" fill="#3c250f">
+    <text x="450" y="130" font-size="31" font-weight="700" letter-spacing="3">IN A WORLD WHERE ANCIENT KINGS,</text>
+    <text x="450" y="171" font-size="31" font-weight="700" letter-spacing="3">FORBIDDEN SERUMS, AND HIDDEN</text>
+    <text x="450" y="212" font-size="31" font-weight="700" letter-spacing="3">GOVERNMENTS COLLIDE,</text>
+    <text x="450" y="253" font-size="31" font-weight="700" letter-spacing="3">ONE MAN RISES FROM THE</text>
+    <text x="450" y="294" font-size="31" font-weight="700" letter-spacing="3">ASHES OF BETRAYAL.</text>
+  </g>
+  <g stroke="#5d3511" stroke-width="3" fill="none">
+    <line x1="322" y1="333" x2="410" y2="333"/>
+    <line x1="490" y1="333" x2="578" y2="333"/>
+    <rect x="439" y="322" width="22" height="22" transform="rotate(45 450 333)"/>
+  </g>
+  <g font-family="Georgia, serif" text-anchor="middle" fill="#111" font-size="25">
+    <text x="450" y="385">Mac Marko Mass, billionaire industrialist by day,</text>
+    <text x="450" y="421">the legendary Master Mask by night, is the second</text>
+    <text x="450" y="457">king of the fallen MasRak Kingdom. After surviving</text>
+    <text x="450" y="493">poison, torture, and the loss of his arm, he sets out to</text>
+    <text x="450" y="529">rebuild the legendary Sabarics, a brotherhood of</text>
+    <text x="450" y="565">heroes sworn to protect humanity.</text>
+    <text x="450" y="642">A mysterious child becomes the ultimate weapon,</text>
+    <text x="450" y="678">Lebyote, the Supreme Elemental King, a boy whose</text>
+    <text x="450" y="714">power surpasses even Master Mask himself.</text>
+    <text x="450" y="750">Manipulated by the ruthless NEXIS, Lebyote</text>
+    <text x="450" y="786">unleashes a storm that threatens to destroy all.</text>
+    <text x="450" y="866">As old enemies return and forgotten legends awaken,</text>
+    <text x="450" y="902">new heroes rise. Revox, Zalax, and Evo must face</text>
+    <text x="450" y="938">impossible choices in a war where every victory</text>
+    <text x="450" y="974">demands a painful sacrifice.</text>
+    <text x="450" y="1054">From neon streets to ancient halls, from divine</text>
+    <text x="450" y="1090">weapons to corrupted governments, SAK: THE</text>
+    <text x="450" y="1126">BEGINNING is an epic tale of redemption, sacrifice,</text>
+    <text x="450" y="1162">and the birth of legends.</text>
+  </g>
+  <g filter="url(#glow)">
+    <circle cx="212" cy="1232" r="86" fill="#15130f" stroke="#d49a35" stroke-width="4"/>
+    <path d="M188 1268 C235 1165 288 1140 322 1120 C286 1175 265 1228 188 1268Z" fill="#dca245"/>
+    <path d="M205 1258 C236 1210 261 1177 306 1133" stroke="#fff1c3" stroke-width="5" fill="none"/>
+  </g>
+  <g font-family="Cinzel, Georgia, serif" fill="#6d4319">
+    <text x="340" y="1219" font-size="31" font-weight="700" letter-spacing="5">ABOUT THE AUTHOR</text>
+  </g>
+  <g font-family="Georgia, serif" fill="#111" font-size="22">
+    <text x="340" y="1264">Yashwanth Reddy creates immersive</text>
+    <text x="340" y="1296">fantasy worlds and unforgettable</text>
+    <text x="340" y="1328">characters where every legend begins.</text>
+  </g>
+</svg>

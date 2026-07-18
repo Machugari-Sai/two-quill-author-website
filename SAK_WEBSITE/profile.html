@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Profile | SAK Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="inner-site profile-site">
+    <div class="space-bg" aria-hidden="true">
+      <div class="stars stars-a"></div>
+      <div class="stars stars-b"></div>
+      <div class="planet-glow"></div>
+      <div class="grid-floor"></div>
+    </div>
+
+    <header class="nav-wrap">
+      <a class="brand" href="index.html"><span class="brand-mark">S</span><span>SAK <em>UNIVERSE</em></span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="novels.html">Novels</a>
+        <a href="comics.html">Comics</a>
+        <a href="heroes.html">Superheroes</a>
+        <a class="active" href="profile.html">Profile</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+      <div class="nav-actions"><a class="nav-cta" href="review.html">Review</a><a class="nav-cta" href="contact.html">Contact</a></div>
+    </header>
+
+    <section class="profile-section">
+      <a class="back-home" href="index.html">Back home</a>
+      <p class="eyebrow"><span></span> User archive</p>
+      <h2>Your <span>Profile</span></h2>
+      <a class="profile-settings-link" href="settings.html"><span>Profile settings</span><strong>Manage your universe preferences →</strong></a>
+      <div class="profile-view" data-profile-view>
+        <div class="profile-loading">Loading profile...</div>
+      </div>
+    </section>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>
