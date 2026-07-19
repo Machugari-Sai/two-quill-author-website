@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const root = __dirname;
 // 8000 and 8001 are used by other local projects in this environment.
 const port = Number(process.env.PORT) || 8010;
-const host = process.env.HOST || "127.0.0.1";
+const host = process.env.HOST || "0.0.0.0";
 const usersFile = path.join(root, "users.json");
 const reviewsFile = path.join(root, "reviews.json");
 const comicRatingsFile = path.join(root, "comic-ratings.json");
@@ -47,11 +47,21 @@ const types = {
   ".json": "application/json; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",
+  ".webp": "image/webp",
+  ".gif": "image/gif",
+  ".ico": "image/x-icon",
+  ".avif": "image/avif",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
 };
 
-const publicPages = new Set(["login.html", "register.html", "404.html"]);
-const publicPrefixes = ["assets/", "tmp/"];
-const publicFiles = new Set(["styles.css", "script.js", "auth.js"]);
+const publicPages = new Set([
+  "404.html", "comics.html", "sak-6a-beginning.html", "flames-of-war.html", "flames-reader.html",
+]);
+const privatePathParts = new Set([
+  ".git", ".agents", ".codex", ".vscode", "node_modules", "tmp",
+  "users.json", "sessions.json", "reviews.json", "comic-ratings.json",
+]);
 
 function readUsers() {
   try {
@@ -214,18 +224,8 @@ function getAdminUser(request) {
   return user && user.role === "admin" ? user : null;
 }
 
-function isPublicPath(relativePath) {
-  return publicPages.has(relativePath) || publicFiles.has(relativePath) || publicPrefixes.some((prefix) => relativePath.startsWith(prefix));
-}
-
 async function handleApi(request, response, requestPath) {
   if (request.method === "GET" && requestPath === "/api/flames-of-war") {
-    const sessionUser = getSessionUser(request);
-    if (!sessionUser) {
-      sendJson(response, 401, { ok: false, message: "Login required." });
-      return;
-    }
-
     let folders = [];
     try {
       const nestedFolders = fs.existsSync(flamesRoot)
@@ -466,7 +466,7 @@ http
         }
         response.writeHead(302, {
           ...securityHeaders,
-          Location: "/login.html",
+          Location: "/index.html",
           "Set-Cookie": `sak_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secureCookie}`,
         });
         response.end();
@@ -476,20 +476,20 @@ http
       const relativePath = requestPath === "/" ? "index.html" : requestPath.replace(/^\/+/, "");
       const filePath = path.resolve(root, relativePath);
       const sessionUser = getSessionUser(request);
+      const pathParts = relativePath.split(/[\\/]+/).filter(Boolean);
 
       if (!filePath.startsWith(root + path.sep) && filePath !== path.join(root, "index.html")) {
         response.writeHead(403, securityHeaders).end("Forbidden");
         return;
       }
 
-      if (sessionUser && publicPages.has(relativePath)) {
-        response.writeHead(302, { ...securityHeaders, Location: "/index.html" });
-        response.end();
+      if (pathParts.some((part) => privatePathParts.has(part) || part.endsWith(".log"))) {
+        response.writeHead(404, securityHeaders).end("Not found");
         return;
       }
 
-      if (fs.existsSync(filePath) && !isPublicPath(relativePath) && path.extname(relativePath) === ".html" && !sessionUser) {
-        response.writeHead(302, { ...securityHeaders, Location: "/login.html" });
+      if (sessionUser && publicPages.has(relativePath)) {
+        response.writeHead(302, { ...securityHeaders, Location: "/index.html" });
         response.end();
         return;
       }

@@ -1,43 +1,13 @@
-const authPageName = location.pathname.split("/").pop() || "index.html";
-const authPublicPages = new Set(["", "login.html", "register.html"]);
-// When served by server.js, the HTTP-only session cookie is authoritative.
-// Keep the localStorage gate only for pages opened directly as static files.
-if (location.protocol === "file:" && !authPublicPages.has(authPageName) && !localStorage.getItem("sak_client_session")) {
-  const next = `${location.pathname}${location.search}${location.hash}`;
-  window.location.replace(`login.html?next=${encodeURIComponent(next)}`);
-}
-
-const loginForm = document.querySelector("[data-login-form]");
-const registerForm = document.querySelector("[data-register-form]");
 const authStatus = document.querySelector("[data-auth-status]");
-const passwordReport = document.querySelector("[data-password-report]");
-const passwordInput = document.querySelector("[data-login-password]");
-const emailInput = document.querySelector("[data-login-email]");
 const profileView = document.querySelector("[data-profile-view]");
 const reviewForm = document.querySelector("[data-review-form]");
 const themeOptions = document.querySelector("[data-theme-options]");
 const settingsStatus = document.querySelector("[data-settings-status]");
 
 document.querySelectorAll(".brand").forEach((brand) => {
-  brand.href = "https://two-quill-author-website.vercel.app/";
+  brand.href = "/";
   brand.setAttribute("aria-label", "Back to Two Quill Stories");
 });
-
-function arrangeTopNavigation() {
-  const nav = document.querySelector(".nav-wrap");
-  const links = nav?.querySelector(".nav-links");
-  const actions = nav?.querySelector(".nav-actions");
-  if (!links || !actions) return;
-  const profile = [...links.querySelectorAll("a")].find((link) => link.getAttribute("href") === "profile.html");
-  const review = actions.querySelector('a[href="review.html"]');
-  links.querySelectorAll('a[href="settings.html"]').forEach((link) => link.remove());
-  if (profile) {
-    profile.classList.add("nav-cta");
-    actions.appendChild(profile);
-  }
-  review?.remove();
-}
-arrangeTopNavigation();
 
 const themes = {
   "royal-blue": { royal: "#09235f", royalLight: "#123c9f", navy: "#030b28", gold: "#f6c84c", deep: "#020718" },
@@ -79,179 +49,15 @@ function setStatus(message, type = "info") {
   authStatus.dataset.type = type;
 }
 
-function syncClientSession(data) {
-  const email = data?.user?.email || document.querySelector("[data-login-email]")?.value.trim().toLowerCase() || document.querySelector("[data-register-email]")?.value.trim().toLowerCase();
-  if (email && data?.ok) {
-    localStorage.setItem("sak_client_session", JSON.stringify({ id: data.user?.id || email, email }));
-  }
-}
-
-function getClientUsers() {
-  try {
-    return JSON.parse(localStorage.getItem("sak_client_users") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveClientUsers(users) {
-  localStorage.setItem("sak_client_users", JSON.stringify(users));
-}
-
-function calculateAge(dob) {
-  if (!dob) return "";
-  const birthDate = new Date(`${dob}T00:00:00`);
-  if (Number.isNaN(birthDate.getTime())) return "";
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const birthdayHasPassed =
-    today.getMonth() > birthDate.getMonth() ||
-    (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
-  if (!birthdayHasPassed) age -= 1;
-  return age >= 0 && age <= 120 ? age : "";
-}
-
-function clientAuthRequest(url, payload = {}) {
-  const users = getClientUsers();
-
-  if (url === "/api/register") {
-    const email = String(payload.email || "").trim().toLowerCase();
-    if (users.some((user) => user.email === email)) throw { message: "This email is already registered. Log in now." };
-    const user = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-      email,
-      password: String(payload.password || ""),
-      profile: { name: payload.name, gender: payload.gender, age: payload.age, dob: payload.dob },
-      createdAt: new Date().toISOString(),
-    };
-    users.push(user);
-    saveClientUsers(users);
-    localStorage.setItem("sak_client_session", JSON.stringify({ id: user.id, email: user.email }));
-    return { ok: true, redirect: "/index.html" };
-  }
-
-  if (url === "/api/login") {
-    const email = String(payload.email || "").trim().toLowerCase();
-    const user = users.find((item) => item.email === email && item.password === String(payload.password || ""));
-    if (!user) throw { message: "Email or password is incorrect." };
-    localStorage.setItem("sak_client_session", JSON.stringify({ id: user.id, email: user.email }));
-    return { ok: true, redirect: "/index.html" };
-  }
-
-  if (url === "/api/profile") {
-    const session = JSON.parse(localStorage.getItem("sak_client_session") || "null");
-    const user = users.find((item) => item.id === session?.id);
-    if (!user) throw { message: "Please log in first." };
-    return { user };
-  }
-
-  throw { message: "This feature needs the server API." };
-}
-
 async function postJson(url, payload) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await response.json();
-    if (!response.ok) throw data;
-    return data;
-  } catch (error) {
-    if (["/api/register", "/api/login"].includes(url)) return clientAuthRequest(url, payload);
-    throw error;
-  }
-}
-
-function renderPasswordHints(hints, matched) {
-  if (!passwordReport) return;
-  if (!hints.length) {
-    passwordReport.innerHTML = '<span class="auth-hint idle">Type your password to scan each character.</span>';
-    return;
-  }
-
-  const firstWrong = hints.find((hint) => hint.status !== "correct");
-  const summary = matched
-    ? '<strong class="auth-pass-good">Password is correct. Access ready.</strong>'
-    : `<strong class="auth-pass-bad">${firstWrong?.message || "Password is not correct yet."}</strong>`;
-
-  const cells = hints
-    .map((hint) => `<span class="pass-cell ${hint.status}" title="${hint.message}">${hint.index}</span>`)
-    .join("");
-
-  passwordReport.innerHTML = `${summary}<div class="pass-grid">${cells}</div>`;
-}
-
-let passwordTimer;
-function scanPassword() {
-  const password = passwordInput?.value || "";
-  if (!password) {
-    renderPasswordHints([], false);
-    return;
-  }
-  if (passwordReport) passwordReport.innerHTML = `<span class="auth-hint idle">Password entered securely. Submit to verify access.</span>`;
-}
-
-if (passwordInput && emailInput) {
-  [passwordInput, emailInput].forEach((field) => {
-    field.addEventListener("input", () => {
-      clearTimeout(passwordTimer);
-      passwordTimer = setTimeout(scanPassword, 180);
-    });
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   });
-}
-
-if (loginForm) {
-  loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(loginForm);
-    setStatus("Checking access key...", "info");
-    try {
-      const data = await postJson("/api/login", {
-        email: formData.get("email"),
-        password: formData.get("password"),
-      });
-      syncClientSession(data);
-      setStatus("Access granted. Entering the SAK Universe...", "good");
-      window.location.href = data.redirect || "/index.html";
-    } catch (error) {
-      setStatus(error.message || "Login failed.", "bad");
-    }
-  });
-}
-
-if (registerForm) {
-  const dobInput = registerForm.querySelector('[name="dob"]');
-  const ageInput = registerForm.querySelector('[name="age"]');
-  const updateAge = () => {
-    ageInput.value = calculateAge(dobInput.value);
-  };
-  dobInput.addEventListener("change", updateAge);
-  dobInput.addEventListener("input", updateAge);
-
-  registerForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(registerForm);
-    setStatus("Creating your universe pass...", "info");
-    try {
-      const data = await postJson("/api/register", {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        gender: formData.get("gender"),
-        age: calculateAge(formData.get("dob")),
-        dob: formData.get("dob"),
-        password: formData.get("password"),
-      });
-      syncClientSession(data);
-      setStatus("Registered successfully. Entering the SAK Universe...", "good");
-      setTimeout(() => {
-        window.location.href = data.redirect || "/index.html";
-      }, 900);
-    } catch (error) {
-      setStatus(error.message || "Registration failed.", "bad");
-    }
-  });
+  const data = await response.json();
+  if (!response.ok) throw data;
+  return data;
 }
 
 if (themeOptions) {
@@ -296,16 +102,11 @@ function formatDate(value) {
 async function loadProfile() {
   if (!profileView) return;
   try {
-    let data;
-    try {
-      data = await fetch("/api/profile").then(async (response) => {
-        const payload = await response.json();
-        if (!response.ok) throw payload;
-        return payload;
-      });
-    } catch {
-      data = clientAuthRequest("/api/profile");
-    }
+    const data = await fetch("/api/profile").then(async (response) => {
+      const payload = await response.json();
+      if (!response.ok) throw payload;
+      return payload;
+    });
     const user = data.user;
     const profile = user.profile || {};
     const displayName = profile.name || user.email;
@@ -337,7 +138,6 @@ loadProfile();
 document.querySelectorAll(".settings-logout").forEach((logoutLink) => {
   logoutLink.addEventListener("click", (event) => {
     event.preventDefault();
-    localStorage.removeItem("sak_client_session");
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   });
 });

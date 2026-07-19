@@ -9,13 +9,15 @@
 <body>
   <main class="inner-site flames-reader-page">
     <div class="space-bg" aria-hidden="true"><div class="stars stars-a"></div><div class="stars stars-b"></div><div class="planet-glow"></div><div class="grid-floor"></div></div>
-    <header class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">S</span><span>SAK <em>UNIVERSE</em></span></a><nav class="nav-links"><a href="comics.html">Comics</a><a href="flames-of-war.html">Flames of War</a></nav><div class="nav-actions"><a class="nav-cta" href="flames-of-war.html">Back</a></div></header>
+    <header class="nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">S</span><span>SAK <em>UNIVERSE</em></span></a><button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button><nav class="nav-links"><a href="index.html">Home</a><a href="novels.html">Novel</a><a class="active" href="comics.html">Comics</a><a href="government.html">Government</a><a href="flames-of-war.html">Flames of War</a></nav><div class="nav-actions"><a class="nav-cta" href="flames-of-war.html">Back</a></div></header>
     <section class="flames-reader-shell">
       <div class="flames-reader-top"><a class="back-home" href="flames-of-war.html">← Back to Flames of War</a><button id="readerClose" class="comic-reader-close" type="button" aria-label="Close comic">×</button></div>
       <h1 id="readerTitle">Loading comic…</h1>
-      <div class="flames-reader-stage"><button id="readerPrevious" type="button">Previous</button><figure><img id="readerImage" alt=""><figcaption id="readerStatus">Loading pages…</figcaption></figure><button id="readerNext" type="button">Next</button></div>
+      <div class="flames-reader-stage"><button id="readerPrevious" type="button">Previous</button><figure><img id="readerImage" alt="Comic page"><figcaption id="readerStatus">Loading pages…</figcaption></figure><button id="readerNext" type="button">Next</button></div>
     </section>
   </main>
-  <script src="flames-reader.js?v=1"></script>
+  <script src="script.js"></script>
+  <script src="comic-data.js?v=1"></script>
+  <script src="flames-reader.js?v=3"></script>
 </body>
 </html>

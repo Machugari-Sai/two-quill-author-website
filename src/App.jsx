@@ -30,7 +30,7 @@ const emailAddress = 'trinath.reddy.106@gmail.com'
 const instagramUrl = 'https://www.instagram.com/two_quill_stories/'
 const sakInstagramUrl = 'https://www.instagram.com/sak.universe/'
 const siteUrl = 'https://twoquillstories.com'
-const sakWebsiteUrl = 'https://two-quill-author-website.vercel.app/SAK_WEBSITE/index.html'
+const sakWebsiteUrl = '/SAK_WEBSITE/index.html'
 
 const philosophyText =
   'I believe every emotion carries a story worth telling. Through my writing, I hope to explore friendship, love, personal growth, and the moments that quietly shape who we become. My goal is not just to tell stories, but to create experiences that stay with readers long after the final page.'
@@ -406,14 +406,15 @@ function Navigation() {
   )
 }
 
-function BookSurface({ src, title, side }) {
+function BookSurface({ loading = 'lazy', src, title, side }) {
   return (
     <div className="absolute inset-0 overflow-hidden rounded-[5px] bg-white shadow-[inset_11px_0_20px_rgba(15,23,42,0.16)] [backface-visibility:hidden]">
       <img
         alt={`${title} ${side} cover`}
         className="h-full w-full bg-white object-contain"
         decoding="async"
-        loading="lazy"
+        fetchPriority={loading === 'eager' ? 'high' : undefined}
+        loading={loading}
         src={src}
       />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.2)_0%,transparent_13%,transparent_82%,rgba(255,255,255,0.2)_100%)]" />
@@ -560,11 +561,11 @@ function ThreeDBook({
           className="absolute inset-0 [transform-style:preserve-3d]"
           transition={rotationTransition}
         >
-          <BookSurface side="front" src={book.front} title={book.title} />
+          <BookSurface loading={size === 'hero' ? 'eager' : 'lazy'} side="front" src={book.front} title={book.title} />
           <div className="absolute bottom-0 left-[-14px] top-0 w-7 origin-right rounded-l-[5px] bg-[linear-gradient(90deg,#082f49,#0f5f8c_48%,#dff6ff)] shadow-[inset_-6px_0_14px_rgba(255,255,255,0.24)] [transform:rotateY(-90deg)]" />
           <div className="absolute bottom-1 right-[-10px] top-1 w-5 rounded-r-sm bg-slate-100 shadow-[inset_5px_0_10px_rgba(15,23,42,0.16)] [transform:translateZ(-8px)]" />
           <div className="absolute inset-0 [transform:rotateY(180deg)]">
-            <BookSurface side="back" src={book.back} title={book.title} />
+            <BookSurface loading={size === 'hero' ? 'eager' : 'lazy'} side="back" src={book.back} title={book.title} />
           </div>
         </motion.div>
       </motion.div>
@@ -1631,6 +1632,32 @@ function ContactPage() {
   )
 }
 
+function NotFoundPage() {
+  return (
+    <PageTransition>
+      <section className="flex min-h-screen items-center justify-center px-5 pb-24 pt-36 sm:px-8">
+        <div className="premium-card w-full max-w-2xl p-8 text-center sm:p-12">
+          <p className="text-xs font-bold uppercase tracking-[0.32em] text-sky-600">
+            Page not found
+          </p>
+          <h1 className="mt-4 font-serif text-5xl leading-tight text-slate-950 sm:text-6xl">
+            This story has not been written yet.
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-slate-600">
+            The page you requested does not exist. Return home to continue
+            exploring Two Quill Stories.
+          </p>
+          <Link className="btn btn-primary mt-8 px-6 py-3" to="/">
+            Back Home
+            <FiArrowLeft aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+      <Footer />
+    </PageTransition>
+  )
+}
+
 function BookPage() {
   const { slug } = useParams()
   const book = books.find((item) => item.id === slug) || featuredBook
@@ -1858,6 +1885,7 @@ function AnimatedRoutes() {
         <Route element={<ContactPage />} path="/contact" />
         <Route element={<BookPage />} path="/books/:slug" />
         <Route element={<BookPage />} path="/novels/:slug" />
+        <Route element={<NotFoundPage />} path="*" />
       </Routes>
     </AnimatePresence>
   )

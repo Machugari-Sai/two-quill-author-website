@@ -10,6 +10,16 @@ let pageIndex = 0;
 let pageTurning = false;
 const stageFigure = document.querySelector(".flames-reader-stage figure");
 
+image.addEventListener("error", () => {
+  image.removeAttribute("src");
+  image.alt = "Comic page unavailable";
+  status.textContent = "This comic page could not be loaded.";
+});
+
+function moveReaderPage(direction) {
+  turnPage(direction);
+}
+
 function showPage() {
   const page = activeFolder.pages[pageIndex];
   const base = activeFolder.basePath ? `${activeFolder.basePath}/` : "";
@@ -22,9 +32,7 @@ function showPage() {
 }
 
 async function loadReader() {
-  const response = await fetch("/api/flames-of-war");
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.message || "Unable to load this comic.");
+  const data = await window.SAKComicData.load();
   activeFolder = data.folders.find((folder) => folder.name === requestedFolder);
   if (!activeFolder || !activeFolder.pages.length) throw new Error("This comic has no image pages yet.");
   showPage();
@@ -39,7 +47,25 @@ function turnPage(direction) {
   window.setTimeout(() => { pageIndex = nextPage; showPage(); }, 360);
   window.setTimeout(() => { stageFigure.classList.remove("turning-next", "turning-prev"); pageTurning = false; }, 720);
 }
+
 previous.addEventListener("click", () => turnPage(-1));
 next.addEventListener("click", () => turnPage(1));
 close.addEventListener("click", () => { window.location.href = "flames-of-war.html"; });
-loadReader().catch((error) => { title.textContent = "Comic unavailable"; status.textContent = error.message; });
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") moveReaderPage(-1);
+  if (event.key === "ArrowRight") moveReaderPage(1);
+});
+let touchStartX = null;
+document.querySelector(".flames-reader-stage")?.addEventListener("touchstart", (event) => {
+  touchStartX = event.changedTouches[0]?.clientX ?? null;
+}, { passive: true });
+document.querySelector(".flames-reader-stage")?.addEventListener("touchend", (event) => {
+  if (touchStartX === null) return;
+  const distance = event.changedTouches[0].clientX - touchStartX;
+  touchStartX = null;
+  if (Math.abs(distance) >= 45) moveReaderPage(distance < 0 ? 1 : -1);
+}, { passive: true });
+loadReader().catch(() => {
+  title.textContent = "Comic unavailable";
+  status.textContent = "Comic data could not be loaded. Please try again.";
+});

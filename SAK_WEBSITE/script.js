@@ -9,14 +9,11 @@ function arrangeTopNavigation() {
   const links = nav?.querySelector(".nav-links");
   const actions = nav?.querySelector(".nav-actions");
   if (!links || !actions) return;
-  const profile = [...links.querySelectorAll("a")].find((link) => link.getAttribute("href") === "profile.html");
-  const review = actions.querySelector('a[href="review.html"]');
-  links.querySelectorAll('a[href="settings.html"]').forEach((link) => link.remove());
-  if (profile) {
-    profile.classList.add("nav-cta");
-    actions.appendChild(profile);
-  }
-  review?.remove();
+  const currentFile = location.pathname.split("/").pop() || "index.html";
+  links.querySelectorAll('a[href="contact.html"], a[href="profile.html"], a[href="review.html"]').forEach((link) => link.remove());
+  actions.querySelectorAll('a[href="contact.html"], a[href="profile.html"], a[href="review.html"]').forEach((link) => link.remove());
+  if (currentFile !== "index.html") actions.querySelectorAll('a[href="settings.html"]').forEach((link) => link.remove());
+  if (!actions.children.length) actions.remove();
 }
 arrangeTopNavigation();
 const savedTheme = localStorage.getItem("sakTheme");
@@ -57,32 +54,25 @@ if (document.querySelector(".map-site, .map-feature")) {
   document.head.appendChild(mapStyles);
 }
 
-// Shared top-right universe navigation, shown consistently on every page.
+// Shared universe navigation, shown consistently on every page.
 const universeMenu = document.createElement("nav");
 universeMenu.className = "universe-menu";
 universeMenu.setAttribute("aria-label", "Universe information");
-const heroesLink = [...document.querySelectorAll(".nav-links a")].find(
-  (link) => link.getAttribute("href") === "heroes.html"
-);
-if (heroesLink) universeMenu.appendChild(heroesLink);
-// Vercel serves these pages as static files, so the standalone Node server
-// cannot protect HTML routes. Keep a lightweight client-side gate for the
-// static deployment; the server-side checks still apply when server.js runs.
-const pageName = location.pathname.split("/").pop() || "index.html";
-const publicPages = new Set(["", "login.html", "register.html"]);
-const hasClientSession = Boolean(localStorage.getItem("sak_client_session"));
-// The Node server protects HTML routes with an HTTP-only cookie. The client
-// fallback is only needed when the files are opened directly from disk.
-if (location.protocol === "file:" && !publicPages.has(pageName) && !hasClientSession) {
-  const next = `${location.pathname}${location.search}${location.hash}`;
-  window.location.replace(`login.html?next=${encodeURIComponent(next)}`);
-}
+// Public story pages work on static hosting; admin data remains protected by
+// the server APIs when server.js is deployed.
+// Public SAK pages do not require a client-side login gate.
 
 const universeLinks = [
+  ["index.html", "Home"], ["novels.html", "Novel"], ["comics.html", "Comics"],
+  ["heroes.html", "Superheroes"],
   ["map.html", "Map"], ["teams.html", "Teams"],
   ["kingdoms.html", "Kingdoms"], ["government.html", "Government"],
 ];
 const currentPage = location.pathname.split("/").pop() || "index.html";
+
+// The shared universe menu below the header is the only SAK section navigation.
+const primaryNav = document.querySelector(".nav-links");
+primaryNav?.replaceChildren();
 universeLinks.forEach(([href, label]) => {
   const link = document.createElement("a");
   link.href = href;
@@ -92,7 +82,152 @@ universeLinks.forEach(([href, label]) => {
 });
 document.querySelector(".nav-wrap")?.insertAdjacentElement("afterend", universeMenu);
 
+// Keep a clear escape route on phone detail pages.
+if (!new Set(["", "index.html"]).has(currentPage)) {
+  const mobileBack = document.createElement("button");
+  mobileBack.className = "mobile-back-button";
+  mobileBack.type = "button";
+  mobileBack.innerHTML = "<span aria-hidden=\"true\">&larr;</span> Back";
+  mobileBack.setAttribute("aria-label", "Go back");
+  mobileBack.addEventListener("click", () => {
+    const sameSiteReferrer = document.referrer && new URL(document.referrer).origin === window.location.origin;
+    if (sameSiteReferrer && window.history.length > 1) window.history.back();
+    else window.location.href = "index.html";
+  });
+  document.body.appendChild(mobileBack);
+}
+
+const welcomeVoiceText = "Welcome to the SAK Universe.";
+const welcomeVoiceStorageKey = "sakWelcomeVoicePlayed";
+let welcomeVoiceAttempted = false;
+let welcomeVoiceStopped = false;
+let welcomeVoiceUtterance = null;
+let welcomeVoiceTimer = null;
+let welcomeVoiceListener = null;
+let welcomeVoiceRetryBound = false;
+let welcomeVoiceRetryHandler = null;
+
+function hasPlayedWelcomeVoice() {
+  try {
+    return window.sessionStorage.getItem(welcomeVoiceStorageKey) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markWelcomeVoicePlayed() {
+  try {
+    window.sessionStorage.setItem(welcomeVoiceStorageKey, "1");
+  } catch {
+    // Private browsing can disable sessionStorage; playback still works.
+  }
+}
+
+function clearWelcomeVoiceWaiters() {
+  if (welcomeVoiceTimer) {
+    window.clearTimeout(welcomeVoiceTimer);
+    welcomeVoiceTimer = null;
+  }
+  if (welcomeVoiceListener && "speechSynthesis" in window) {
+    window.speechSynthesis.removeEventListener("voiceschanged", welcomeVoiceListener);
+    welcomeVoiceListener = null;
+  }
+}
+
+function clearWelcomeVoiceGestureRetry() {
+  if (!welcomeVoiceRetryHandler) return;
+  document.removeEventListener("pointerdown", welcomeVoiceRetryHandler, true);
+  document.removeEventListener("keydown", welcomeVoiceRetryHandler, true);
+  welcomeVoiceRetryHandler = null;
+  welcomeVoiceRetryBound = false;
+}
+
+function stopWelcomeVoice() {
+  welcomeVoiceStopped = true;
+  clearWelcomeVoiceWaiters();
+  clearWelcomeVoiceGestureRetry();
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  welcomeVoiceUtterance = null;
+}
+
+function selectWelcomeVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  const englishVoices = voices.filter((voice) => /^en(-|_)/i.test(voice.lang));
+  const preferredVoice = englishVoices.find((voice) => /Google UK English Male|Google US English Male|Microsoft (David|Mark|Ryan|Guy)|Alex|Daniel/i.test(voice.name));
+  return preferredVoice || englishVoices[0] || voices[0];
+}
+
+function speakWelcomeVoice() {
+  if (
+    !intro ||
+    welcomeVoiceStopped ||
+    welcomeVoiceAttempted ||
+    hasPlayedWelcomeVoice() ||
+    !("speechSynthesis" in window) ||
+    !("SpeechSynthesisUtterance" in window)
+  ) return;
+
+  welcomeVoiceAttempted = true;
+  clearWelcomeVoiceWaiters();
+  const synthesis = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance(welcomeVoiceText);
+  const voice = selectWelcomeVoice();
+  if (voice) {
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+  } else {
+    utterance.lang = "en-US";
+  }
+  utterance.rate = 0.86;
+  utterance.pitch = 0.72;
+  utterance.volume = 0.78;
+  utterance.onstart = () => markWelcomeVoicePlayed();
+  utterance.onend = () => {
+    welcomeVoiceUtterance = null;
+  };
+  utterance.onerror = (event) => {
+    welcomeVoiceUtterance = null;
+    if (!welcomeVoiceStopped && event.error === "not-allowed") welcomeVoiceAttempted = false;
+  };
+  welcomeVoiceUtterance = utterance;
+  synthesis.cancel();
+  synthesis.speak(utterance);
+}
+
+function bindWelcomeVoiceGestureRetry() {
+  if (welcomeVoiceRetryBound || !intro || hasPlayedWelcomeVoice()) return;
+  welcomeVoiceRetryBound = true;
+  const retry = (event) => {
+    if (event.target.closest?.("#skipIntro")) {
+      clearWelcomeVoiceGestureRetry();
+      return;
+    }
+    clearWelcomeVoiceGestureRetry();
+    speakWelcomeVoice();
+  };
+  welcomeVoiceRetryHandler = retry;
+  document.addEventListener("pointerdown", retry, true);
+  document.addEventListener("keydown", retry, true);
+}
+
+function prepareWelcomeVoice() {
+  if (!intro || hasPlayedWelcomeVoice() || !("speechSynthesis" in window)) return;
+  const synthesis = window.speechSynthesis;
+  const start = () => speakWelcomeVoice();
+  if (synthesis.getVoices().length) start();
+  else {
+    welcomeVoiceListener = start;
+    synthesis.addEventListener("voiceschanged", welcomeVoiceListener, { once: true });
+    welcomeVoiceTimer = window.setTimeout(start, 450);
+  }
+  bindWelcomeVoiceGestureRetry();
+}
+
+prepareWelcomeVoice();
+if (intro) window.addEventListener("pagehide", stopWelcomeVoice, { once: true });
+
 function revealSite(skip = false) {
+  stopWelcomeVoice();
   if (skip) intro.classList.add("hidden");
   site.classList.add("visible");
   site.setAttribute("aria-hidden", "false");
@@ -247,7 +382,7 @@ if (comicLinks.length) {
     <div class="comic-reader-shell">
       <div class="comic-reader-bar">
         <div><span>Comic reader</span><strong>Page 01</strong></div>
-        <button class="comic-reader-close" type="button" aria-label="Close comic reader">&times;</button>
+        <button class="comic-reader-close" type="button" aria-label="Back to comic labels">BACK</button>
       </div>
       <div class="comic-reader-stage">
         <figure class="comic-page-frame">
@@ -371,7 +506,7 @@ if (elementCards.length) {
   viewer.innerHTML = `
     <div class="hero-viewer-bar">
       <div><span>Elementos archive</span><strong></strong></div>
-      <button type="button" aria-label="Close hero profile">×</button>
+      <button type="button" aria-label="Back to labels">BACK</button>
     </div>
     <div class="hero-viewer-stage"><img alt=""></div>`;
   document.body.appendChild(viewer);
@@ -413,7 +548,7 @@ if (sabaricHeroLabels.length) {
   viewer.setAttribute("aria-hidden", "true");
   viewer.innerHTML = `
     <div class="kingdom-hero-viewer-shell">
-      <button class="kingdom-hero-close" type="button" aria-label="Close hero image">x</button>
+      <button class="kingdom-hero-close" type="button" aria-label="Back to labels">BACK</button>
       <h3></h3>
       <p class="kingdom-hero-viewer-team"></p>
       <div class="sabaric-viewer-stage">
@@ -543,7 +678,7 @@ if (aniProfileLinks.length) {
   viewer.setAttribute("aria-hidden", "true");
   viewer.innerHTML = `
     <div class="ani-profile-shell">
-      <button class="ani-profile-close" type="button" aria-label="Close ANI POW profile">x</button>
+      <button class="ani-profile-close" type="button" aria-label="Back to labels">BACK</button>
       <section class="ani-profile-copy">
         <span></span>
         <h2></h2>
@@ -566,7 +701,7 @@ if (aniProfileLinks.length) {
   fullViewer.setAttribute("role", "dialog");
   fullViewer.setAttribute("aria-modal", "true");
   fullViewer.setAttribute("aria-hidden", "true");
-  fullViewer.innerHTML = `<button type="button" aria-label="Close full image">x</button><img alt="">`;
+  fullViewer.innerHTML = `<button type="button" aria-label="Back to profile">BACK</button><img alt="">`;
   document.body.appendChild(fullViewer);
   let activeProfile = null;
   let activeName = "";
@@ -705,7 +840,7 @@ const kingdomArchive = document.getElementById("kingdomArchive");
 const kingdomPage = document.getElementById("kingdomPage");
 const kingdomHeroesArchive = document.getElementById("kingdomHeroesArchive");
 if (kingdomArchive || kingdomPage || kingdomHeroesArchive) {
-  const base = "Kingdom archive";
+  const base = "KING DOM's";
   const kingdomData = [
     { name:"MAS RAK", displayName:"Mas Rak", teamName:"Mas Rak Guardians", images:["ChatGPT Image May 29, 2026, 05_12_45 PM.png","ChatGPT Image May 31, 2026, 04_04_58 PM.png"], folders:[{ name:"HERO'S OF MASRAK", images:["ChatGPT Image May 31, 2026, 05_03_31 PM.png","ChatGPT Image May 31, 2026, 05_03_34 PM.png","ChatGPT Image May 31, 2026, 05_03_35 PM.png","ChatGPT Image May 31, 2026, 05_03_38 PM.png","ChatGPT Image May 31, 2026, 05_03_40 PM.png","ChatGPT Image May 31, 2026, 05_03_56 PM.png","ChatGPT Image May 31, 2026, 05_04_00 PM.png","ChatGPT Image May 31, 2026, 05_04_02 PM.png","ChatGPT Image May 31, 2026, 05_04_11 PM.png","ChatGPT Image May 31, 2026, 05_10_09 PM.png"] }] },
     { name:"BANIZAR", displayName:"Banizar", teamName:"The Radiant Sentinels of Banizar", images:["ChatGPT Image Jul 11, 2026, 03_29_15 PM.png","ChatGPT Image May 30, 2026, 12_26_54 PM.png"], folders:[{ name:"HERO's", images:["ChatGPT Image Jul 11, 2026, 03_28_38 PM.png","ChatGPT Image Jul 11, 2026, 03_28_42 PM.png","ChatGPT Image Jul 11, 2026, 03_28_45 PM.png","ChatGPT Image Jul 11, 2026, 03_28_47 PM.png"] }] },
@@ -790,7 +925,7 @@ if (kingdomArchive || kingdomPage || kingdomHeroesArchive) {
     heroViewer.setAttribute("aria-hidden", "true");
     heroViewer.innerHTML = `
       <div class="kingdom-hero-viewer-shell">
-        <button class="kingdom-hero-close" type="button" aria-label="Close hero image">x</button>
+        <button class="kingdom-hero-close" type="button" aria-label="Back to labels">BACK</button>
         <h3></h3>
         <p class="kingdom-hero-viewer-team"></p>
         <img alt="">
@@ -862,7 +997,7 @@ if (kingdomArchive || kingdomPage || kingdomHeroesArchive) {
     heroViewer.setAttribute("aria-hidden", "true");
     heroViewer.innerHTML = `
       <div class="kingdom-hero-viewer-shell">
-        <button class="kingdom-hero-close" type="button" aria-label="Close hero image">x</button>
+        <button class="kingdom-hero-close" type="button" aria-label="Back to labels">BACK</button>
         <h3></h3>
         <img alt="">
       </div>`;
@@ -1019,7 +1154,7 @@ if (circleProfileLinks.length) {
   viewer.setAttribute("role", "dialog");
   viewer.setAttribute("aria-modal", "true");
   viewer.setAttribute("aria-hidden", "true");
-  viewer.innerHTML = `<div class="hero-viewer-bar"><div><span>Circle Agents</span><strong></strong></div><button type="button" aria-label="Close hero profile">×</button></div><div class="hero-viewer-stage"><img alt=""></div>`;
+  viewer.innerHTML = `<div class="hero-viewer-bar"><div><span>Circle Agents</span><strong></strong></div><button type="button" aria-label="Back to labels">BACK</button></div><div class="hero-viewer-stage"><img alt=""></div>`;
   document.body.appendChild(viewer);
   const viewerImage = viewer.querySelector("img");
   const viewerName = viewer.querySelector("strong");
@@ -1086,6 +1221,9 @@ document.querySelectorAll(depthSelectors).forEach((card) => {
     card.style.setProperty("--pointer-x", "50%");
     card.style.setProperty("--pointer-y", "0%");
   });
+  card.addEventListener("pointerdown", () => card.classList.add("touch-lift"), { passive: true });
+  card.addEventListener("pointerup", () => card.classList.remove("touch-lift"), { passive: true });
+  card.addEventListener("pointercancel", () => card.classList.remove("touch-lift"), { passive: true });
 });
 
 document.querySelectorAll("img").forEach((image) => {
@@ -1097,6 +1235,6 @@ document.querySelectorAll("img").forEach((image) => {
   image.addEventListener("error", () => image.classList.remove("sak-image-loading"), { once: true });
 });
 document.querySelectorAll(".brand").forEach((brand) => {
-  brand.href = "https://two-quill-author-website.vercel.app/";
+  brand.href = "/";
   brand.setAttribute("aria-label", "Back to Two Quill Stories");
 });

@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.audit-backup/
+.audit-backup-phase34/
+SAK-universe-audit-backup.zip
 
 # Editor directories and files
 .vscode/*
