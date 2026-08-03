@@ -100,6 +100,7 @@ if (!new Set(["", "index.html"]).has(currentPage)) {
 const welcomeVoiceText = "Welcome to the SAK Universe.";
 const welcomeVoiceStorageKey = "sakWelcomeVoicePlayed";
 let welcomeVoiceAttempted = false;
+let welcomeVoicePlayed = false;
 let welcomeVoiceStopped = false;
 let welcomeVoiceUtterance = null;
 let welcomeVoiceTimer = null;
@@ -108,14 +109,11 @@ let welcomeVoiceRetryBound = false;
 let welcomeVoiceRetryHandler = null;
 
 function hasPlayedWelcomeVoice() {
-  try {
-    return window.sessionStorage.getItem(welcomeVoiceStorageKey) === "1";
-  } catch {
-    return false;
-  }
+  return welcomeVoicePlayed;
 }
 
 function markWelcomeVoicePlayed() {
+  welcomeVoicePlayed = true;
   try {
     window.sessionStorage.setItem(welcomeVoiceStorageKey, "1");
   } catch {
@@ -181,17 +179,30 @@ function speakWelcomeVoice() {
   utterance.rate = 0.86;
   utterance.pitch = 0.72;
   utterance.volume = 0.78;
-  utterance.onstart = () => markWelcomeVoicePlayed();
+  utterance.onstart = () => {
+    markWelcomeVoicePlayed();
+    clearWelcomeVoiceGestureRetry();
+  };
   utterance.onend = () => {
     welcomeVoiceUtterance = null;
   };
   utterance.onerror = (event) => {
     welcomeVoiceUtterance = null;
-    if (!welcomeVoiceStopped && event.error === "not-allowed") welcomeVoiceAttempted = false;
+    if (
+      !welcomeVoiceStopped &&
+      !hasPlayedWelcomeVoice() &&
+      !["canceled", "interrupted"].includes(event.error)
+    ) {
+      welcomeVoiceAttempted = false;
+      bindWelcomeVoiceGestureRetry();
+    }
   };
   welcomeVoiceUtterance = utterance;
   synthesis.cancel();
-  synthesis.speak(utterance);
+  // Some browsers need a short gap after cancel() before accepting a new utterance.
+  window.setTimeout(() => {
+    if (!welcomeVoiceStopped && !hasPlayedWelcomeVoice()) synthesis.speak(utterance);
+  }, 40);
 }
 
 function bindWelcomeVoiceGestureRetry() {
@@ -202,7 +213,6 @@ function bindWelcomeVoiceGestureRetry() {
       clearWelcomeVoiceGestureRetry();
       return;
     }
-    clearWelcomeVoiceGestureRetry();
     speakWelcomeVoice();
   };
   welcomeVoiceRetryHandler = retry;

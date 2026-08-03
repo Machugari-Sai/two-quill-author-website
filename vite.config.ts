@@ -1,3 +1,6 @@
+// Temporary migration boundary for the existing custom Vite plugin.
+// @ts-nocheck
+
 import fs from 'node:fs'
 import path from 'node:path'
 import { env } from 'node:process'

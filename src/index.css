@@ -95,6 +95,56 @@ a {
   color: #b8860b !important;
 }
 
+.sak-logo {
+  align-items: center;
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 32% 25%, #fff8c5 0%, #facc15 35%, #b8860b 100%);
+  border: 1px solid #f5d36a;
+  border-radius: 9999px;
+  animation: sak-logo-spin 8s linear infinite;
+  box-shadow:
+    0 0 0 3px rgba(250, 204, 21, 0.16),
+    0 0 16px rgba(234, 179, 8, 0.7),
+    0 0 30px rgba(234, 179, 8, 0.32);
+  color: #573900;
+  display: inline-flex;
+  font-size: 0.68rem;
+  font-weight: 900;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  min-width: 2.5rem;
+  position: relative;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.sak-logo:hover,
+.sak-logo:focus-visible {
+  box-shadow:
+    0 0 0 4px rgba(250, 204, 21, 0.2),
+    0 0 22px rgba(234, 179, 8, 0.9),
+    0 0 42px rgba(234, 179, 8, 0.42);
+  color: #573900;
+  transform: translateY(-1px) scale(1.06);
+}
+
+.sak-logo-mobile {
+  flex: 0 0 auto;
+}
+
+@keyframes sak-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .btn {
   align-items: center;
   border-radius: 0.5rem;
