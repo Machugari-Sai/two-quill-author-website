@@ -1,0 +1,16 @@
+# Local tooling and temporary files
+.agents/
+.codex/
+.vscode/
+.git/
+tmp/
+*.log
+
+# Runtime-generated local data
+users.json
+sessions.json
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CRM Admin | SAK Universe</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .crm-shell { max-width: 1200px; margin: 0 auto; padding: 34px 20px 70px; }
+    .crm-head { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:28px; }
+    .crm-head h1 { margin:0 0 8px; }
+    .crm-head p { margin:0; opacity:.72; }
+    .crm-link { color: inherit; }
+    .crm-metrics { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:26px; }
+    .crm-card, .crm-panel { border:1px solid rgba(255,255,255,.13); border-radius:16px; padding:20px; background:rgba(255,255,255,.055); }
+    .crm-card small { opacity:.7; display:block; margin-bottom:10px; }
+    .crm-card strong { font-size:2rem; }
+    .crm-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .crm-panel h2 { margin:0 0 16px; font-size:1.1rem; }
+    .crm-table { width:100%; border-collapse:collapse; font-size:.92rem; }
+    .crm-table th, .crm-table td { text-align:left; padding:11px 8px; border-bottom:1px solid rgba(255,255,255,.1); vertical-align:top; }
+    .crm-table th { opacity:.65; font-weight:600; }
+    .crm-empty, .crm-error { opacity:.7; padding:12px 0; }
+    .crm-error { color:#ffaaa5; }
+    @media (max-width:760px) { .crm-metrics, .crm-grid { grid-template-columns:1fr 1fr; } .crm-head { flex-direction:column; } }
+    @media (max-width:480px) { .crm-metrics, .crm-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main class="crm-shell">
+    <div class="crm-head">
+      <div><p>SAK Universe · CRM workspace</p><h1>Admin dashboard</h1><p id="welcome">Loading customer insights…</p></div>
+      <div><a class="crm-link" href="/index.html">Back to site</a> · <a class="crm-link" href="/logout">Log out</a></div>
+    </div>
+    <div id="error" class="crm-error" hidden></div>
+    <section class="crm-metrics" aria-label="CRM metrics">
+      <div class="crm-card"><small>Customers</small><strong id="customers">—</strong></div>
+      <div class="crm-card"><small>Total users</small><strong id="totalUsers">—</strong></div>
+      <div class="crm-card"><small>Website reviews</small><strong id="reviews">—</strong></div>
+      <div class="crm-card"><small>Average rating</small><strong id="average">—</strong></div>
+    </section>
+    <section class="crm-grid">
+      <div class="crm-panel"><h2>Recent customers</h2><div id="users" class="crm-empty">Loading…</div></div>
+      <div class="crm-panel"><h2>Latest website feedback</h2><div id="reviewsList" class="crm-empty">Loading…</div></div>
+      <div class="crm-panel"><h2>Comic ratings</h2><div id="ratings" class="crm-empty">Loading…</div></div>
+    </section>
+  </main>
+  <script src="admin.js"></script>
+</body>
+</html>
