@@ -495,6 +495,9 @@ body {
 .brand-mark { border-radius: 10px; box-shadow: 0 0 24px rgba(246, 200, 76, 0.14); }
 
 .universe-menu {
+  position: relative;
+  top: auto;
+  right: auto;
   width: min(100% - 64px, 1260px);
   margin: 14px auto 0;
   padding: 8px;
@@ -527,6 +530,11 @@ body {
   width: min(100% - 40px, 1280px);
   min-height: 400px;
   padding: 110px 30px 72px;
+}
+
+/* Keep the SAK home navigation and hero visually grouped on wide screens. */
+.inner-site > .universe-menu + .hero {
+  padding-top: clamp(56px, 7vw, 96px);
 }
 
 .page-hero h1,
@@ -961,4 +969,179 @@ body::before { opacity: .48; background: radial-gradient(circle at 12% 8%, rgba(
   font-size: 28px;
   line-height: 1;
   transform: rotate(-18deg);
+}
+
+/* SAK Universe brand palette: Deep Navy Blue + Warm Gold. */
+:root {
+  --royal: #14243A;
+  --royal-light: #B89455;
+  --deep: #14243A;
+  --navy: #14243A;
+  --gold: #B89455;
+  --gold-bright: #B89455;
+  --muted: rgba(184, 148, 85, 0.78);
+  --pink: #B89455;
+  --mint: #B89455;
+  --surface: rgba(20, 36, 58, 0.88);
+  --surface-strong: #14243A;
+  --line: rgba(184, 148, 85, 0.4);
+}
+
+body,
+.site,
+.inner-site {
+  background: #14243A;
+  color: #B89455;
+}
+
+body::before,
+.space-bg::after {
+  background: linear-gradient(120deg, rgba(184, 148, 85, 0.08), transparent 42%, rgba(184, 148, 85, 0.06));
+}
+
+.space-bg {
+  background: radial-gradient(circle at 76% 18%, rgba(184, 148, 85, 0.16), transparent 34%), #14243A;
+}
+
+.nav-wrap {
+  border-color: rgba(184, 148, 85, 0.42);
+  background: rgba(20, 36, 58, 0.96);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(184, 148, 85, 0.22);
+}
+
+.brand,
+.nav-links a,
+.hero h2,
+.page-hero h1,
+.section-intro h2,
+.team-heading h2,
+.novel-detail-copy h1,
+.sabarics-lore-heading h2,
+.story-card h3,
+.team-label h3,
+.contact-card strong {
+  color: #B89455;
+}
+
+.brand em,
+.nav-links a:hover,
+.nav-links a.active,
+.hero h2 span,
+.page-hero h1 span,
+.section-intro h2 em,
+.team-heading h2 em,
+.novel-detail-copy h1 span,
+.sabarics-lore-heading h2 em,
+.eyebrow,
+.hero-stats strong,
+.text-link i,
+.scroll-cue {
+  color: #B89455;
+}
+
+.brand-mark {
+  color: #B89455;
+  border-color: #B89455;
+  background: #14243A;
+  box-shadow: 0 0 24px rgba(184, 148, 85, 0.2);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  border-color: #B89455;
+}
+
+.universe-menu {
+  background: rgba(20, 36, 58, 0.96);
+  border-color: rgba(184, 148, 85, 0.34);
+}
+
+.universe-menu a {
+  color: rgba(184, 148, 85, 0.82);
+  border-color: rgba(184, 148, 85, 0.34);
+  background: rgba(20, 36, 58, 0.9);
+}
+
+.universe-menu a:hover,
+.universe-menu a.active,
+.nav-cta:hover,
+.nav-cta.active {
+  color: #14243A;
+  border-color: #B89455;
+  background: #B89455;
+}
+
+.nav-cta,
+.gold-button,
+.auth-submit,
+.settings-logout,
+.novel-edition-links a {
+  color: #14243A;
+  border-color: #B89455;
+  background: #B89455;
+  box-shadow: 0 14px 32px rgba(184, 148, 85, 0.18);
+}
+
+.gold-button:hover,
+.nav-cta:hover {
+  background: #B89455;
+  box-shadow: 0 18px 40px rgba(184, 148, 85, 0.28);
+}
+
+.hero-description,
+.story-card p,
+.team-label p,
+.contact-card small,
+.novel-text-panel p,
+.sabarics-lore-panel p,
+.hero-stats span,
+.page-hero p:not(.eyebrow) {
+  color: rgba(184, 148, 85, 0.78);
+}
+
+.story-card,
+.team-label,
+.contact-card,
+.settings-card,
+.auth-panel,
+.profile-hero-card,
+.novel-text-panel,
+.sabarics-lore-panel,
+.gov-profile,
+.kingdom-name-label,
+.sabaric-hero-label {
+  border-color: rgba(184, 148, 85, 0.34);
+  background: linear-gradient(145deg, rgba(20, 36, 58, 0.98), rgba(20, 36, 58, 0.78));
+}
+
+.story-card:hover,
+.team-label:hover,
+.contact-card:hover,
+.kingdom-name-label:hover,
+.sabaric-hero-label:hover {
+  border-color: #B89455;
+  box-shadow: 0 30px 78px rgba(0, 0, 0, 0.42), 0 0 30px rgba(184, 148, 85, 0.16);
+}
+
+.eyebrow span,
+.scroll-cue span {
+  background: #B89455;
+  box-shadow: 0 0 16px rgba(184, 148, 85, 0.5);
+}
+
+input,
+select,
+textarea,
+button {
+  accent-color: #B89455;
+}
+
+.intro {
+  background: radial-gradient(circle at 50% 38%, rgba(184, 148, 85, 0.28), transparent 28%), #14243A;
+}
+
+.intro-title strong {
+  color: #B89455;
+  -webkit-text-stroke: 0;
+  text-shadow: 0 0 26px rgba(184, 148, 85, 0.34);
 }

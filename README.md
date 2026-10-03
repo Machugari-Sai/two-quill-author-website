@@ -32,8 +32,14 @@ they are not low-level programming languages.
 ## Routes
 
 - `/`
+- `/books`
 - `/books/she-was-the-friend-i-dreamed-for`
 - `/books/what-love-reveals`
+- `/books/the-girl-i-never-met`
+- `/sak-novels` and its three detail routes
+- `/author`
+- `/author-journey`
+- `/contact`
 
 ## Development
 

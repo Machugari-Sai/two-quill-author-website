@@ -10,13 +10,13 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
   useParams,
 } from 'react-router-dom'
 import {
   FiArrowLeft,
   FiArrowRight,
   FiArrowUpRight,
-  FiFeather,
   FiBookOpen,
   FiInstagram,
   FiMail,
@@ -30,6 +30,8 @@ import loveFront from './assets/books/what-love-reveals-front.png'
 import sakOneFront from './assets/books/sak-1-front.png'
 import sakTwoFront from './assets/books/sak-2-front.png'
 import sakThreeFront from './assets/books/sak-3-front.png'
+import girlNeverMetFront from './assets/books/the-girl-i-never-met-front.png'
+import twoQuillStoriesLogo from './assets/logo/Screenshot 2026-10-04 011634.png'
 
 const emailAddress = 'trinath.reddy.106@gmail.com'
 const instagramUrl = 'https://www.instagram.com/two_quill_stories/'
@@ -50,16 +52,7 @@ const publishedBooks = [
     back: sheBack,
     description:
       "She Was The Friend I Dreamed For is a heartfelt journey through friendship, loyalty, distance, memories, and the emotions that remain long after conversations end.\n\nThe book explores what it truly means to find someone who understands you beyond words. Through reflections, life lessons, and meaningful moments, it reminds readers that genuine friendship is one of life's greatest gifts.\n\nIf you have ever cherished a friend, missed someone who changed your life, or wondered what true friendship really means, this book was written for you.",
-    links: [
-      {
-        label: 'Buy on Amazon',
-        href: 'https://www.amazon.in/She-Was-Friend-I-Dreamed/dp/B0GZSHS3NV/',
-      },
-      {
-        label: 'Buy on Pothi',
-        href: 'https://store.pothi.com/book/yashwanth-reddy-she-was-friend-i-dreamed/',
-      },
-    ],
+    links: [],
   },
   {
     id: 'what-love-reveals',
@@ -79,6 +72,24 @@ const publishedBooks = [
         type: 'paperback',
       },
     ],
+  },
+]
+
+const upcomingBooks = [
+  {
+    id: 'the-girl-i-never-met',
+    path: '/books/the-girl-i-never-met',
+    title: 'The Girl I Never Met',
+    status: 'Coming soon',
+    genre: 'Dreams, mystery, and emotional fiction',
+    front: girlNeverMetFront,
+    back: girlNeverMetFront,
+    isUpcoming: true,
+    description:
+      'Rudra’s life changes when a mysterious girl named Uma begins appearing in his dreams. As the dreams begin connecting with reality, he must uncover the truth behind a forgotten bond, a lost love, and the girl he never met.',
+    bookDescription:
+      'What if the person you thought you had never met… had been waiting for you all along?\n\nRudra’s life changes when a mysterious girl begins appearing in his dreams.\n\nHe cannot see her face. He doesn’t know where she comes from. Yet somehow, she knows things about his life that no stranger should know.\n\nAt first, the dreams seem meaningless. Then they begin to connect with his reality.\n\nA warning.\nA broken bond.\nA forgotten love.\nA girl named Uma.\n\nAs Rudra begins recording every dream in his notebook, the line between dreams and reality slowly starts to disappear. The more he learns about the mysterious girl, the more questions he has.\n\nWho is Uma?\nWhy does she keep appearing in his dreams?\nWhy can’t he remember her face?\nAnd what is the truth behind the girl he never met?\n\nThe Girl I Never Met is a story about dreams, forgotten memories, friendship, loss, and a love that may have been closer than Rudra ever realized.\n\nSometimes, the person we are searching for isn’t someone new.\n\nSometimes, they are someone we were never able to truly forget.',
+    links: [],
   },
 ]
 
@@ -124,9 +135,10 @@ const sakNovelBooks = [
   },
 ]
 
-const books = publishedBooks
+const books = [...publishedBooks, ...upcomingBooks]
 const libraryBooks = publishedBooks
 const novelBooks = []
+const homepageBooks = [...publishedBooks, ...upcomingBooks]
 
 const featuredBook = books.find((book) => book.featured) || books[0]
 
@@ -135,7 +147,7 @@ const timelineItems = [
   { label: 'Published', title: 'What Love Reveals' },
 ]
 
-const authorJourneyBooks = [
+const legacyAuthorJourneyBooks = [
   {
     order: 'First Book',
     title: 'She Was The Friend I Dreamed For',
@@ -153,7 +165,7 @@ const authorJourneyBooks = [
     theme: 'Epic Fantasy',
   },
   {
-    order: 'Third Published Book',
+    order: 'Second Book',
     title: 'What Love Reveals',
     purpose:
       'Written to explore the real meaning of love, misunderstandings about love, emotional growth, trust, and self-reflection.',
@@ -170,6 +182,65 @@ const authorJourneyBooks = [
   },
   {
     order: 'SAK Universe · Book 3',
+    title: 'SAK THE REVENGER OF ANI POWS (SAK 3)',
+    purpose:
+      'The third SAK novel, turning the story toward the ANI POWs and a new chapter of revenge, loyalty, power, and destiny.',
+    publishedOn: 'Pothi and Google Play Books',
+    theme: 'Heroes and Revenge',
+  },
+  {
+    order: 'Third Book · Coming Soon',
+    title: 'THE GIRL I NEVER MET',
+    purpose:
+      'A new emotional mystery about dreams, forgotten memories, friendship, loss, and a love that may be closer than it seems.',
+    publishedOn: 'Coming soon',
+    theme: 'Dreams and Mystery',
+  },
+]
+
+const authorJourneyBooks = [
+  {
+    order: 'First Book',
+    title: 'She Was The Friend I Dreamed For',
+    purpose:
+      'Written as a heartfelt book about friendship, memories, emotions, and the value of a true best friend.',
+    publishedOn: 'Amazon and Pothi',
+    theme: 'Friendship',
+  },
+  {
+    order: 'Second Book',
+    title: 'What Love Reveals',
+    purpose:
+      'Written to explore the real meaning of love, misunderstandings about love, emotional growth, trust, and self-reflection.',
+    publishedOn: 'Pothi',
+    theme: 'Love',
+  },
+  {
+    order: 'Third Book - Coming Soon',
+    title: 'THE GIRL I NEVER MET',
+    purpose:
+      'A new emotional mystery about dreams, forgotten memories, friendship, loss, and a love that may be closer than it seems.',
+    publishedOn: 'Coming soon',
+    theme: 'Dreams and Mystery',
+  },
+  {
+    order: 'SAK Universe - Book 1 - Fourth Book',
+    title: 'SAK THE BEGINNING (SAK 1)',
+    purpose:
+      'The first SAK novel, opening an epic universe of ancient kingdoms, hidden governments, powerful heroes, and the rise of Master Mask.',
+    publishedOn: 'Pothi and Google Play Books',
+    theme: 'Epic Fantasy',
+  },
+  {
+    order: 'SAK Universe - Book 2 - Fifth Book',
+    title: 'SAK THE FLAMES OF WAR (SAK 2)',
+    purpose:
+      'The second SAK novel, expanding the universe into a dangerous age of conflict, sacrifice, heroes, and war.',
+    publishedOn: 'Pothi and Google Play Books',
+    theme: 'Fantasy War',
+  },
+  {
+    order: 'SAK Universe - Book 3 - Sixth Book',
     title: 'SAK THE REVENGER OF ANI POWS (SAK 3)',
     purpose:
       'The third SAK novel, turning the story toward the ANI POWs and a new chapter of revenge, loyalty, power, and destiny.',
@@ -255,13 +326,18 @@ function PageTransition({ children }) {
 
 function SEO() {
   const location = useLocation()
-  const slug =
-    location.pathname.startsWith('/books/')
-    ? location.pathname.split('/').filter(Boolean).at(-1)
-    : ''
-  const book = books.find((item) => item.id === slug)
-  const title = book ? pageTitle(book) : routeTitle(location.pathname)
-  const description = pageDescription(book) || routeDescription(location.pathname)
+  const segments = location.pathname.split('/').filter(Boolean)
+  const slug = segments.at(-1) || ''
+  const book = location.pathname.startsWith('/books/')
+    ? books.find((item) => item.id === slug)
+    : null
+  const novel = location.pathname.startsWith('/sak-novels/')
+    ? sakNovelBooks.find((item) => item.id === slug)
+    : null
+  const page = book || novel
+  const title = page ? pageTitle(page) : routeTitle(location.pathname)
+  const description =
+    (book ? pageDescription(book) : novel?.description) || routeDescription(location.pathname)
   const canonicalUrl = `${siteUrl}${location.pathname}`
 
   useEffect(() => {
@@ -290,7 +366,7 @@ function SEO() {
       property: 'og:description',
     })
     upsertMeta('meta[property="og:type"]', {
-      content: book ? 'book' : 'website',
+      content: page ? 'book' : 'website',
       property: 'og:type',
     })
     upsertMeta('meta[property="og:url"]', {
@@ -319,18 +395,52 @@ function SEO() {
     }
     structuredData.textContent = JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': book ? 'Book' : 'WebSite',
+      '@type': page ? 'Book' : 'WebSite',
       author: {
         '@type': 'Person',
         name: 'Machugari Yashwanth Reddy',
       },
       description,
-      name: book ? book.title : 'Two Quill Stories',
+      name: page ? page.title : 'Two Quill Stories',
       url: canonicalUrl,
     })
   }, [book, canonicalUrl, description, title])
 
   return null
+}
+
+function MobileBackButton() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  if (location.pathname === '/') return null
+
+  const fallbackPath = location.pathname.startsWith('/sak-novels/')
+    ? '/sak-novels'
+    : location.pathname.startsWith('/books/')
+      ? '/books'
+      : '/'
+
+  function goBack() {
+    const hasRelevantHistory =
+      window.history.state?.idx > 0 ||
+      document.referrer.startsWith(window.location.origin)
+
+    if (hasRelevantHistory) {
+      navigate(-1)
+    } else {
+      navigate(fallbackPath)
+    }
+  }
+
+  return (
+    <div className="mobile-back-bar md:hidden">
+      <button className="mobile-back-button" onClick={goBack} type="button">
+        <FiArrowLeft aria-hidden="true" />
+        Back
+      </button>
+    </div>
+  )
 }
 
 function ExternalLink({ children, className, href, isPlaceholder }) {
@@ -385,13 +495,13 @@ function Navigation() {
     <nav className="fixed inset-x-0 top-0 z-50 border-b border-sky-100/80 bg-white/90 shadow-[0_10px_34px_rgba(14,116,144,0.08)] backdrop-blur-2xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
         <NavLink
-          className="group flex min-w-0 items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-950 sm:text-sm"
+          aria-label="Two Quill Stories home"
+          className="group flex min-w-0 items-center"
+          end
           to="/"
+          title="Two Quill Stories home"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-sky-200 bg-sky-50 text-sky-700 shadow-sm transition group-hover:-translate-y-0.5 group-hover:border-sky-300 group-hover:bg-white">
-            <FiFeather aria-hidden="true" />
-          </span>
-          <span className="truncate">Two Quill Stories</span>
+          <img alt="Two Quill Stories" className="two-quill-logo" src={twoQuillStoriesLogo} />
         </NavLink>
         <div className="hidden items-center gap-6 text-sm font-semibold md:flex">
           <NavLink className={linkClass} end to="/">
@@ -409,14 +519,6 @@ function Navigation() {
           <NavLink className={linkClass} to="/contact">
             Connect
           </NavLink>
-          <a
-            aria-label="SAK Nexus"
-            className="sak-logo"
-            href={sakWebsiteUrl}
-            title="SAK Nexus"
-          >
-            SAK
-          </a>
         </div>
       </div>
       <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-5 pb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-600 sm:px-8 md:hidden">
@@ -435,14 +537,6 @@ function Navigation() {
         <NavLink className={(state) => `${linkClass(state)} whitespace-nowrap`} to="/contact">
           Connect
         </NavLink>
-        <a
-          aria-label="SAK Nexus"
-          className="sak-logo sak-logo-mobile"
-          href={sakWebsiteUrl}
-          title="SAK Nexus"
-        >
-          SAK
-        </a>
       </div>
     </nav>
   )
@@ -689,11 +783,11 @@ function HomePage() {
           </motion.div>
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
-            className="hero-books grid items-end gap-5 sm:grid-cols-2"
+            className="hero-books grid grid-cols-2 items-end gap-4 sm:grid-cols-3 sm:gap-5"
             initial={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.8, delay: 0.15, ease: 'easeOut' }}
           >
-            {publishedBooks.map((book, index) => (
+            {homepageBooks.map((book, index) => (
               <Link
                 className={`block rounded-xl outline-none transition focus-visible:ring-4 focus-visible:ring-sky-200 ${
                   index === 0 ? 'sm:mt-10' : 'sm:-mb-10'
@@ -701,7 +795,7 @@ function HomePage() {
                 key={book.id}
                 to={book.path}
               >
-                <FrontCover book={book} />
+                <FrontCover book={book} compact />
               </Link>
             ))}
           </motion.div>
@@ -710,6 +804,7 @@ function HomePage() {
 
       <HomeIntro />
       <FeaturedBooksPreview />
+      <UpcomingBookPreview />
       <QuoteMoment />
       <Footer />
     </PageTransition>
@@ -861,6 +956,59 @@ function BookLibrary() {
                   </p>
                   <Link className="btn btn-primary mt-7 w-fit px-5 py-3 text-sm" to={book.path}>
                     Discover / Learn More
+                    <FiArrowRight aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
+        <div className="mt-20 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-sky-600">
+              In progress
+            </p>
+            <h2 className="mt-3 font-serif text-4xl leading-tight text-slate-950 sm:text-5xl">
+              Coming Soon
+            </h2>
+          </div>
+          <p className="max-w-xl leading-7 text-slate-600">
+            New stories currently in development. Publication details will be
+            shared when they are ready.
+          </p>
+        </div>
+        <motion.div
+          className="mt-8 grid gap-8 lg:grid-cols-2"
+          initial="hidden"
+          variants={stagger}
+          viewport={{ once: true, amount: 0.2 }}
+          whileInView="visible"
+        >
+          {upcomingBooks.map((book) => (
+            <motion.article
+              className="premium-card group relative overflow-hidden p-6 sm:p-7"
+              key={book.id}
+              variants={fadeUp}
+            >
+              <div className="relative grid gap-7 xl:grid-cols-[245px_1fr] xl:items-center">
+                <Link className="rounded-xl outline-none focus-visible:ring-4 focus-visible:ring-sky-200" to={book.path}>
+                  <FrontCover book={book} compact />
+                </Link>
+                <div className="flex flex-col justify-center">
+                  <span className="mb-4 inline-flex w-fit rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-amber-700">
+                    {book.status}
+                  </span>
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-sky-600">
+                    {book.genre}
+                  </p>
+                  <h3 className="mt-4 font-serif text-3xl leading-tight text-slate-950">
+                    {book.title}
+                  </h3>
+                  <p className="mt-4 line-clamp-4 leading-7 text-slate-600">
+                    {book.description}
+                  </p>
+                  <Link className="btn btn-primary mt-7 w-fit px-5 py-3 text-sm" to={book.path}>
+                    Read About the Book
                     <FiArrowRight aria-hidden="true" />
                   </Link>
                 </div>
@@ -1276,6 +1424,53 @@ function NovelBookPage({ book }) {
   )
 }
 
+function UpcomingBookPreview() {
+  const book = upcomingBooks[0]
+
+  return (
+    <section className="section bg-white">
+      <div className="mx-auto max-w-5xl">
+        <SectionHeading
+          eyebrow="Coming Soon"
+          subtitle="A new novel currently in development."
+          title="The next story"
+        />
+        <motion.article
+          className="premium-card mt-12 overflow-hidden border-amber-100 bg-[linear-gradient(135deg,#fffdf5_0%,#ffffff_65%)] p-6 sm:p-8"
+          initial="hidden"
+          variants={fadeUp}
+          viewport={{ once: true, amount: 0.25 }}
+          whileInView="visible"
+        >
+          <div className="grid gap-8 sm:grid-cols-[220px_1fr] sm:items-center">
+            <Link className="rounded-xl outline-none focus-visible:ring-4 focus-visible:ring-amber-200" to={book.path}>
+              <FrontCover book={book} compact />
+            </Link>
+            <div>
+              <span className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-amber-700">
+                {book.status}
+              </span>
+              <p className="mt-5 text-xs font-bold uppercase tracking-[0.24em] text-sky-600">
+                {book.genre}
+              </p>
+              <h2 className="mt-3 font-serif text-4xl leading-tight text-slate-950 sm:text-5xl">
+                {book.title}
+              </h2>
+              <p className="mt-5 max-w-2xl leading-8 text-slate-600">
+                {book.description}
+              </p>
+              <Link className="btn btn-primary mt-7 w-fit px-5 py-3 text-sm" to={book.path}>
+                Read About the Book
+                <FiArrowRight aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </motion.article>
+      </div>
+    </section>
+  )
+}
+
 function WhyIWrite() {
   return (
     <section className="section border-y border-sky-100 bg-[linear-gradient(180deg,#f4fbff_0%,#ffffff_100%)]">
@@ -1400,10 +1595,19 @@ function AuthorSection() {
               <span className="font-semibold text-slate-900">
                 What Love Reveals
               </span>
-              , explores the deeper meaning of love beyond attraction and
-              romance, encouraging readers to reflect on trust, understanding,
-              forgiveness, personal growth, and the emotions that shape human
-              relationships.
+              , will be published through Pothi. It explores the deeper meaning
+              of love beyond attraction and romance, encouraging readers to
+              reflect on trust, understanding, forgiveness, personal growth,
+              and the emotions that shape human relationships.
+            </p>
+            <p>
+              His third book,{' '}
+              <span className="font-semibold text-slate-900">
+                THE GIRL I NEVER MET
+              </span>
+              , is an upcoming emotional mystery about dreams, forgotten
+              memories, friendship, loss, and a love that may be closer than
+              it seems.
             </p>
             <p>
               Beyond nonfiction, Yashwanth also enjoys writing novels,
@@ -1824,7 +2028,7 @@ function BookPage() {
   const pageBackground = book.front
   const isLoveBook = book.id === 'what-love-reveals'
   const usesStaticCovers =
-    book.id === 'she-was-the-friend-i-dreamed-for' || isLoveBook || isNovel
+    book.id === 'she-was-the-friend-i-dreamed-for' || isLoveBook || isNovel || book.isUpcoming
 
   if (isNovel) {
     return <NovelBookPage book={book} />
@@ -1916,7 +2120,7 @@ function BookPage() {
               Book Description
             </p>
             <h2 className="mt-4 font-serif text-4xl text-slate-950 sm:text-5xl">
-              The beginning of a universe
+              {book.isUpcoming ? 'A story still taking shape' : 'The beginning of a universe'}
             </h2>
             <div className="mt-7 text-lg leading-8 text-slate-600">
               {paragraphs(book.bookDescription, 'mt-5 leading-8 text-slate-600')}
@@ -1942,19 +2146,21 @@ function BookPage() {
         </section>
       ) : null}
 
-      <section className="border-y border-sky-100 bg-[linear-gradient(180deg,#f4fbff_0%,#ffffff_100%)] px-5 py-20 sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.32em] text-sky-600">
-              Purchase
-            </p>
-            <h2 className="mt-4 font-serif text-4xl text-slate-950 sm:text-5xl">
-              {book.title}
-            </h2>
+      {book.links.length ? (
+        <section className="border-y border-sky-100 bg-[linear-gradient(180deg,#f4fbff_0%,#ffffff_100%)] px-5 py-20 sm:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.32em] text-sky-600">
+                Purchase
+              </p>
+              <h2 className="mt-4 font-serif text-4xl text-slate-950 sm:text-5xl">
+                {book.title}
+              </h2>
+            </div>
+            <BuyButtons book={book} large />
           </div>
-          <BuyButtons book={book} large />
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {related ? (
         <section className="section bg-white">
@@ -2048,6 +2254,7 @@ function App() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f7fcff] text-slate-800">
       <Navigation />
+      <MobileBackButton />
       <SEO />
       <ScrollToHash />
       <AnimatedRoutes />

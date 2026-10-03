@@ -33,12 +33,11 @@ const themes = {
 };
 
 function applyTheme(themeName) {
-  const theme = themes[themeName] || themes["royal-blue"];
-  document.documentElement.style.setProperty("--royal", theme.royal);
-  document.documentElement.style.setProperty("--royal-light", theme.royalLight);
-  document.documentElement.style.setProperty("--navy", theme.navy);
-  document.documentElement.style.setProperty("--gold", theme.gold);
-  document.documentElement.style.setProperty("--deep", theme.deep);
+  document.documentElement.style.setProperty("--royal", "#14243A");
+  document.documentElement.style.setProperty("--royal-light", "#B89455");
+  document.documentElement.style.setProperty("--navy", "#14243A");
+  document.documentElement.style.setProperty("--gold", "#B89455");
+  document.documentElement.style.setProperty("--deep", "#14243A");
 }
 
 applyTheme(localStorage.getItem("sakTheme") || "royal-blue");
