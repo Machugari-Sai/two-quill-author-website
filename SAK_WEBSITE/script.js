@@ -73,6 +73,10 @@ const currentPage = location.pathname.split("/").pop() || "index.html";
 // The shared universe menu below the header is the only SAK section navigation.
 const primaryNav = document.querySelector(".nav-links");
 primaryNav?.replaceChildren();
+// The generated universe menu is the shared navigation on every SAK page.
+// Remove the page-specific toggle after replacing its menu so it cannot open
+// an empty drawer or appear as a dead control on touch screens.
+menuButton?.remove();
 universeLinks.forEach(([href, label]) => {
   const link = document.createElement("a");
   link.href = href;
