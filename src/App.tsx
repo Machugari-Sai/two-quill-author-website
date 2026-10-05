@@ -213,23 +213,7 @@ const authorJourneyBooks = [
     theme: 'Friendship',
   },
   {
-    order: 'Second Book',
-    title: 'What Love Reveals',
-    purpose:
-      'Written to explore the real meaning of love, misunderstandings about love, emotional growth, trust, and self-reflection.',
-    publishedOn: 'Pothi',
-    theme: 'Love',
-  },
-  {
-    order: 'Third Book - Coming Soon',
-    title: 'THE GIRL I NEVER MET',
-    purpose:
-      'A new emotional mystery about dreams, forgotten memories, friendship, loss, and a love that may be closer than it seems.',
-    publishedOn: 'Coming soon',
-    theme: 'Dreams and Mystery',
-  },
-  {
-    order: 'SAK Universe - Book 1 - Fourth Book',
+    order: 'Second Book · First SAK Novel',
     title: 'SAK THE BEGINNING (SAK 1)',
     purpose:
       'The first SAK novel, opening an epic universe of ancient kingdoms, hidden governments, powerful heroes, and the rise of Master Mask.',
@@ -237,7 +221,15 @@ const authorJourneyBooks = [
     theme: 'Epic Fantasy',
   },
   {
-    order: 'SAK Universe - Book 2 - Fifth Book',
+    order: 'Third Book',
+    title: 'What Love Reveals',
+    purpose:
+      'Written to explore the real meaning of love, misunderstandings about love, emotional growth, trust, and self-reflection.',
+    publishedOn: 'Pothi',
+    theme: 'Love',
+  },
+  {
+    order: 'Fourth Book · Second SAK Novel',
     title: 'SAK THE FLAMES OF WAR (SAK 2)',
     purpose:
       'The second SAK novel, expanding the universe into a dangerous age of conflict, sacrifice, heroes, and war.',
@@ -245,12 +237,20 @@ const authorJourneyBooks = [
     theme: 'Fantasy War',
   },
   {
-    order: 'SAK Universe - Book 3 - Sixth Book',
+    order: 'Fifth Book · Third SAK Novel',
     title: 'SAK THE REVENGER OF ANI POWS (SAK 3)',
     purpose:
       'The third SAK novel, turning the story toward the ANI POWs and a new chapter of revenge, loyalty, power, and destiny.',
     publishedOn: 'Pothi and Google Play Books',
     theme: 'Heroes and Revenge',
+  },
+  {
+    order: 'Sixth Book',
+    title: 'THE GIRL I NEVER MET',
+    purpose:
+      'A new emotional mystery about dreams, forgotten memories, friendship, loss, and a love that may be closer than it seems.',
+    publishedOn: 'Coming soon',
+    theme: 'Dreams and Mystery',
   },
 ]
 
@@ -1684,8 +1684,8 @@ function AuthorJourneySection({ compactHeader = false }) {
             </h2>
             <p className="mt-6 text-lg leading-8 text-slate-600">
               Every book I write begins with a feeling. My journey started with
-              friendship, moved through love, and opened the door to fiction
-              through the SAK Universe.
+              friendship, entered the SAK Universe, explored love, and continued
+              through stories of imagination, emotion, and reflection.
             </p>
           </motion.div>
         )}
