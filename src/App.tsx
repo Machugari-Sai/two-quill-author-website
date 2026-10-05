@@ -19,6 +19,8 @@ import {
   FiArrowUpRight,
   FiBookOpen,
   FiInstagram,
+  FiLogIn,
+  FiLogOut,
   FiMail,
   FiShoppingBag,
 } from 'react-icons/fi'
@@ -32,6 +34,9 @@ import sakTwoFront from './assets/books/sak-2-front.png'
 import sakThreeFront from './assets/books/sak-3-front.png'
 import girlNeverMetFront from './assets/books/the-girl-i-never-met-front.png'
 import twoQuillStoriesLogo from './assets/logo/Screenshot 2026-10-04 011634.png'
+import { LoginPage, RegisterPage } from './auth/AuthPages'
+import { useAuth } from './auth/AuthContext'
+import { ProtectedRoute } from './auth/ProtectedRoute'
 
 const emailAddress = 'trinath.reddy.106@gmail.com'
 const instagramUrl = 'https://www.instagram.com/two_quill_stories/'
@@ -413,7 +418,7 @@ function MobileBackButton() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  if (location.pathname === '/') return null
+  if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register') return null
 
   const fallbackPath = location.pathname.startsWith('/sak-novels/')
     ? '/sak-novels'
@@ -488,6 +493,8 @@ function SectionHeading({ eyebrow, title, subtitle, align = 'left' }) {
 }
 
 function Navigation() {
+  const { user, isAuthenticated, logout } = useAuth()
+  const navigate = useNavigate()
   const linkClass = ({ isActive }) =>
     `nav-link ${isActive ? 'is-active text-sky-800' : 'text-slate-600'}`
 
@@ -519,6 +526,7 @@ function Navigation() {
           <NavLink className={linkClass} to="/contact">
             Connect
           </NavLink>
+          {isAuthenticated ? <button className="auth-nav-button" onClick={() => { void logout().then(() => navigate('/')) }} type="button"><span>{user?.name?.split(' ')[0] || 'Account'}</span><FiLogOut /></button> : <NavLink className="auth-nav-button" to="/login"><FiLogIn /> Sign in</NavLink>}
         </div>
       </div>
       <div className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-5 pb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-600 sm:px-8 md:hidden">
@@ -537,6 +545,7 @@ function Navigation() {
         <NavLink className={(state) => `${linkClass(state)} whitespace-nowrap`} to="/contact">
           Connect
         </NavLink>
+        {isAuthenticated ? <button className="auth-nav-button" onClick={() => { void logout().then(() => navigate('/')) }} type="button"><FiLogOut /> Log out</button> : <NavLink className="auth-nav-button" to="/login"><FiLogIn /> Sign in</NavLink>}
       </div>
     </nav>
   )
@@ -2237,13 +2246,17 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes key={location.pathname} location={location}>
         <Route element={<HomePage />} path="/" />
-        <Route element={<BooksPage />} path="/books" />
-        <Route element={<SakNovelsPage />} path="/sak-novels" />
-        <Route element={<SakNovelBookPage />} path="/sak-novels/:slug" />
-        <Route element={<AuthorPage />} path="/author" />
-        <Route element={<AuthorJourneyPage />} path="/author-journey" />
-        <Route element={<ContactPage />} path="/contact" />
-        <Route element={<BookPage />} path="/books/:slug" />
+        <Route element={<LoginPage />} path="/login" />
+        <Route element={<RegisterPage />} path="/register" />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<BooksPage />} path="/books" />
+          <Route element={<SakNovelsPage />} path="/sak-novels" />
+          <Route element={<SakNovelBookPage />} path="/sak-novels/:slug" />
+          <Route element={<AuthorPage />} path="/author" />
+          <Route element={<AuthorJourneyPage />} path="/author-journey" />
+          <Route element={<ContactPage />} path="/contact" />
+          <Route element={<BookPage />} path="/books/:slug" />
+        </Route>
         <Route element={<NotFoundPage />} path="*" />
       </Routes>
     </AnimatePresence>
@@ -2251,10 +2264,13 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  const location = useLocation()
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register'
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#f7fcff] text-slate-800">
-      <Navigation />
-      <MobileBackButton />
+      {!isAuthPage && <Navigation />}
+      {!isAuthPage && <MobileBackButton />}
       <SEO />
       <ScrollToHash />
       <AnimatedRoutes />

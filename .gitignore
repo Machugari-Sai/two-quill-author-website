@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+backend/*.sqlite
+backend/*.sqlite-*
 .audit-backup/
 .audit-backup-phase34/
 SAK-universe-audit-backup.zip

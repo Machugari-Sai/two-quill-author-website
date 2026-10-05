@@ -9,6 +9,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 const sakApiTarget = env.SAK_API_URL || 'http://127.0.0.1:8010'
+const authApiTarget = env.AUTH_API_URL || 'http://127.0.0.1:3001'
 const frontendPort = Number(env.SAK_FRONTEND_PORT) || 5173
 
 function copySakWebsite() {
@@ -81,6 +82,14 @@ export default defineConfig({
     host: '127.0.0.1',
     port: frontendPort,
     proxy: {
+      '/api/auth': {
+        target: authApiTarget,
+        changeOrigin: true,
+      },
+      '/api/health': {
+        target: authApiTarget,
+        changeOrigin: true,
+      },
       '/api': {
         target: sakApiTarget,
         changeOrigin: false,
