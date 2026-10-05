@@ -50,7 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     isAuthenticated: Boolean(user),
     async login(data) {
-      const payload = await request('/auth/login', { method: 'POST', body: JSON.stringify(data) })
+      const { remember, ...credentials } = data
+      const payload = await request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) })
       ;(data.remember ? localStorage : sessionStorage).setItem(tokenKey, payload.accessToken)
       setUser(payload.user)
       return payload.user
