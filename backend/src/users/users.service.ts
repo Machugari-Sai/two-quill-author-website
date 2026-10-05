@@ -15,7 +15,9 @@ export class UsersService {
       await this.users.save(user)
       return this.toSafeUser(user)
     } catch (error: any) {
-      if (error?.code === 11000) throw new ConflictException('An account with this email already exists.')
+      if (error?.code === 'SQLITE_CONSTRAINT' || error?.errno === 19 || String(error?.message).includes('UNIQUE constraint failed')) {
+        throw new ConflictException('An account with this email already exists.')
+      }
       throw error
     }
   }

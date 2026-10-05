@@ -65,3 +65,57 @@ Set `JWT_SECRET` in `backend/.env`. SQLite is stored locally at `backend/two-qui
 ```bash
 npm run build
 ```
+
+## Environment variables
+
+Copy `.env.example` to `.env` for local frontend development. The frontend uses
+`VITE_API_URL=/api` locally so Vite proxies authentication requests to NestJS.
+
+For production, set the Vercel variable `VITE_API_URL` to the deployed backend
+base URL, for example `https://your-render-service.onrender.com/api`.
+
+For the backend, copy `backend/.env.example` to `backend/.env` and set a long
+private `JWT_SECRET`. `FRONTEND_URL` must be the Vercel origin without a trailing
+slash. Never commit either `.env` file.
+
+## Deployment
+
+### Vercel frontend
+
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variable: `VITE_API_URL=https://your-render-service.onrender.com/api`
+- Redeploy after changing the environment variable.
+
+`vercel.json` preserves built static files and provides SPA fallback routing for
+React Router direct navigation.
+
+### Render backend
+
+The backend is a monorepo service rooted at `backend/`:
+
+- Runtime: Node
+- Root directory: `backend`
+- Build command: `npm ci --include=dev && npm run build`
+- Start command: `npm start`
+- Health check: `/api/health`
+- Required variables: `NODE_ENV=production`, `JWT_SECRET`, `JWT_EXPIRES_IN=7d`,
+  `SQLITE_PATH=two-quill.sqlite`, and the Vercel origin as `FRONTEND_URL`.
+
+The server binds to Render's `PORT` on `0.0.0.0`; do not hardcode a production
+port.
+
+## Database and deployment limitation
+
+The backend uses TypeORM with SQLite and automatically creates the `users` table
+with `synchronize: true`. Render's default filesystem is ephemeral, so SQLite
+user data can be lost after a redeploy or restart. A Render persistent disk can
+preserve it, but persistent disks are not available on Render's free service.
+Keep SQLite for now if this is a demo or early deployment; choose a persistent
+storage plan or approve a database migration before treating it as production
+data storage.
+
+The legacy `SAK_WEBSITE/server.js` API is a separate local Node server on port
+8010. Vercel deploys its static assets through the Vite build, but it does not
+run that legacy Node API. The React authentication API is the NestJS service
+described above.
