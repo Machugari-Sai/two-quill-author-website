@@ -17,7 +17,7 @@ async function request(path: string, options: RequestInit = {}) {
   try {
     response = await fetch(`${apiBase}${path}`, { ...options, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(options.headers || {}) } })
   } catch {
-    throw new Error('The account service is not available. Start the NestJS backend and check your MongoDB configuration.')
+    throw new Error('The account service is not available. Please try again in a moment or contact support if the problem continues.')
   }
   const rawBody = await response.text()
   let payload: any = {}

@@ -6,7 +6,7 @@ Professional author website for Machugari Yashwanth Reddy.
 
 - TypeScript and TSX for the modern application code
 - JavaScript for the legacy browser pages and Node.js SAK API server
-- NestJS + Mongoose backend in `backend/` for the main site's authentication API
+- NestJS + TypeORM backend in `backend/` for the main site's authentication API
 - React, Vite, Tailwind CSS, Framer Motion, React Router, and React Icons
 - HTML for page structure and CSS for presentation
 - JSON and XML for data/configuration and the sitemap
@@ -23,7 +23,7 @@ maintainability.
 
 - `src/` — React application, routes, styles, and imported book artwork
 - `SAK_WEBSITE/` — standalone SAK Universe pages and their browser assets
-- `backend/` — NestJS TypeScript API with JWT authentication and MongoDB support
+- `backend/` — NestJS TypeScript API with JWT authentication and SQLite storage
 - `scripts/` — project maintenance and audit utilities
 - `assets/source-covers/` — original source cover images kept outside the application code
 
@@ -58,7 +58,7 @@ copy .env.example .env
 npm run start:dev
 ```
 
-Set `JWT_SECRET` in `backend/.env`. SQLite is stored locally at `backend/two-quill.sqlite`; no MongoDB server is required. The Vite development proxy sends `/api/auth/*` to NestJS on port 3001 and preserves the legacy SAK API on port 8010.
+Set `JWT_SECRET` in `backend/.env`. SQLite is stored locally at `backend/two-quill.sqlite`; no external database server is required. The Vite development proxy sends `/api/auth/*` to NestJS on port 3001 and preserves the legacy SAK API on port 8010.
 
 ## Build
 
