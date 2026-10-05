@@ -7,7 +7,13 @@ type Registration = Credentials & { name: string }
 type AuthContextValue = { user: AuthUser | null; loading: boolean; isAuthenticated: boolean; login: (data: Credentials) => Promise<AuthUser>; register: (data: Registration) => Promise<AuthUser>; logout: () => Promise<void> }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
-const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
+const configuredApiUrl = import.meta.env.VITE_API_URL || ''
+const defaultProductionApiUrl = 'https://two-quill-author-website.onrender.com/api'
+const apiBase = (configuredApiUrl && !configuredApiUrl.includes('YOUR-RENDER-URL')
+  ? configuredApiUrl
+  : import.meta.env.PROD
+    ? defaultProductionApiUrl
+    : '/api').replace(/\/$/, '')
 const tokenKey = 'two-quill-access-token'
 const getToken = () => localStorage.getItem(tokenKey) || sessionStorage.getItem(tokenKey)
 
