@@ -32,7 +32,7 @@ import loveFront from './assets/books/what-love-reveals-front.png'
 import sakOneFront from './assets/books/sak-1-front.png'
 import sakTwoFront from './assets/books/sak-2-front.png'
 import sakThreeFront from './assets/books/sak-3-front.png'
-import girlNeverMetFront from './assets/books/the-girl-i-never-met-front.png'
+import sleepingHeartFront from '../Letters from a Sleeping Heart _Cover.png'
 import twoQuillStoriesLogo from './assets/logo/Screenshot 2026-10-04 011634.png'
 import { LoginPage, RegisterPage } from './auth/AuthPages'
 import { useAuth } from './auth/AuthContext'
@@ -46,7 +46,7 @@ const sakWebsiteUrl = '/SAK_WEBSITE/index.html'
 const philosophyText =
   'I believe every emotion carries a story worth telling. Through my writing, I hope to explore friendship, love, personal growth, and the moments that quietly shape who we become. My goal is not just to tell stories, but to create experiences that stay with readers long after the final page.'
 
-const publishedBooks = [
+const initialPublishedBooks = [
   {
     id: 'she-was-the-friend-i-dreamed-for',
     path: '/books/she-was-the-friend-i-dreamed-for',
@@ -80,23 +80,30 @@ const publishedBooks = [
   },
 ]
 
-const upcomingBooks = [
-  {
-    id: 'the-girl-i-never-met',
-    path: '/books/the-girl-i-never-met',
-    title: 'The Girl I Never Met',
-    status: 'Coming soon',
+const newPublishedBook = {
+    id: 'letters-from-a-sleeping-heart',
+    path: '/books/letters-from-a-sleeping-heart',
+    legacySlugs: ['the-girl-i-never-met'],
+    title: 'Letters from a Sleeping Heart',
+    status: 'Available now',
     genre: 'Dreams, mystery, and emotional fiction',
-    front: girlNeverMetFront,
-    back: girlNeverMetFront,
-    isUpcoming: true,
+    front: sleepingHeartFront,
+    back: sleepingHeartFront,
     description:
-      'Rudra’s life changes when a mysterious girl named Uma begins appearing in his dreams. As the dreams begin connecting with reality, he must uncover the truth behind a forgotten bond, a lost love, and the girl he never met.',
+      'Rudra’s life changes when a mysterious girl named Uma begins appearing in his dreams. As the dreams begin connecting with reality, he must uncover the truth behind a forgotten bond, a lost love, and the letters from a sleeping heart.',
     bookDescription:
-      'What if the person you thought you had never met… had been waiting for you all along?\n\nRudra’s life changes when a mysterious girl begins appearing in his dreams.\n\nHe cannot see her face. He doesn’t know where she comes from. Yet somehow, she knows things about his life that no stranger should know.\n\nAt first, the dreams seem meaningless. Then they begin to connect with his reality.\n\nA warning.\nA broken bond.\nA forgotten love.\nA girl named Uma.\n\nAs Rudra begins recording every dream in his notebook, the line between dreams and reality slowly starts to disappear. The more he learns about the mysterious girl, the more questions he has.\n\nWho is Uma?\nWhy does she keep appearing in his dreams?\nWhy can’t he remember her face?\nAnd what is the truth behind the girl he never met?\n\nThe Girl I Never Met is a story about dreams, forgotten memories, friendship, loss, and a love that may have been closer than Rudra ever realized.\n\nSometimes, the person we are searching for isn’t someone new.\n\nSometimes, they are someone we were never able to truly forget.',
-    links: [],
-  },
-]
+      'What if the person you thought you had never met… had been waiting for you all along?\n\nRudra’s life changes when a mysterious girl begins appearing in his dreams.\n\nHe cannot see her face. He doesn’t know where she comes from. Yet somehow, she knows things about his life that no stranger should know.\n\nAt first, the dreams seem meaningless. Then they begin to connect with his reality.\n\nA warning.\nA broken bond.\nA forgotten love.\nA girl named Uma.\n\nAs Rudra begins recording every dream in his notebook, the line between dreams and reality slowly starts to disappear. The more he learns about the mysterious girl, the more questions he has.\n\nWho is Uma?\nWhy does she keep appearing in his dreams?\nWhy can’t he remember her face?\nAnd what is the truth behind the letters from a sleeping heart?\n\nLetters from a Sleeping Heart is a story about dreams, forgotten memories, friendship, loss, and a love that may have been closer than Rudra ever realized.\n\nSometimes, the person we are searching for isn’t someone new.\n\nSometimes, they are someone we were never able to truly forget.',
+    links: [
+      {
+        label: 'Buy Paperback (Pothi)',
+        href: 'https://store.pothi.com/book/machugari-yashwanth-reddy-the-girl-i-never-met/',
+        type: 'paperback',
+      },
+    ],
+  }
+
+const publishedBooks = [...initialPublishedBooks, newPublishedBook]
+const upcomingBooks = []
 
 const sakNovelBooks = [
   {
@@ -150,6 +157,7 @@ const featuredBook = books.find((book) => book.featured) || books[0]
 const timelineItems = [
   { label: 'Published', title: 'She Was The Friend I Dreamed For' },
   { label: 'Published', title: 'What Love Reveals' },
+  { label: 'Published', title: 'Letters from a Sleeping Heart' },
 ]
 
 const legacyAuthorJourneyBooks = [
@@ -194,11 +202,11 @@ const legacyAuthorJourneyBooks = [
     theme: 'Heroes and Revenge',
   },
   {
-    order: 'Third Book · Coming Soon',
-    title: 'THE GIRL I NEVER MET',
+    order: 'Third Book',
+    title: 'LETTERS FROM A SLEEPING HEART',
     purpose:
       'A new emotional mystery about dreams, forgotten memories, friendship, loss, and a love that may be closer than it seems.',
-    publishedOn: 'Coming soon',
+    publishedOn: 'Pothi',
     theme: 'Dreams and Mystery',
   },
 ]
@@ -246,10 +254,10 @@ const authorJourneyBooks = [
   },
   {
     order: 'Sixth Book',
-    title: 'THE GIRL I NEVER MET',
+    title: 'LETTERS FROM A SLEEPING HEART',
     purpose:
       'A new emotional mystery about dreams, forgotten memories, friendship, loss, and a love that may be closer than it seems.',
-    publishedOn: 'Coming soon',
+    publishedOn: 'Pothi',
     theme: 'Dreams and Mystery',
   },
 ]
@@ -334,7 +342,7 @@ function SEO() {
   const segments = location.pathname.split('/').filter(Boolean)
   const slug = segments.at(-1) || ''
   const book = location.pathname.startsWith('/books/')
-    ? books.find((item) => item.id === slug)
+    ? books.find((item) => item.id === slug || item.legacySlugs?.includes(slug))
     : null
   const novel = location.pathname.startsWith('/sak-novels/')
     ? sakNovelBooks.find((item) => item.id === slug)
@@ -343,7 +351,7 @@ function SEO() {
   const title = page ? pageTitle(page) : routeTitle(location.pathname)
   const description =
     (book ? pageDescription(book) : novel?.description) || routeDescription(location.pathname)
-  const canonicalUrl = `${siteUrl}${location.pathname}`
+  const canonicalUrl = `${siteUrl}${book?.path || location.pathname}`
 
   useEffect(() => {
     const upsertMeta = (selector, attributes) => {
@@ -1436,6 +1444,8 @@ function NovelBookPage({ book }) {
 function UpcomingBookPreview() {
   const book = upcomingBooks[0]
 
+  if (!book) return null
+
   return (
     <section className="section bg-white">
       <div className="mx-auto max-w-5xl">
@@ -1604,7 +1614,7 @@ function AuthorSection() {
               <span className="font-semibold text-slate-900">
                 What Love Reveals
               </span>
-              , will be published through Pothi. It explores the deeper meaning
+              , published through Pothi, explores the deeper meaning
               of love beyond attraction and romance, encouraging readers to
               reflect on trust, understanding, forgiveness, personal growth,
               and the emotions that shape human relationships.
@@ -1612,9 +1622,9 @@ function AuthorSection() {
             <p>
               His third book,{' '}
               <span className="font-semibold text-slate-900">
-                THE GIRL I NEVER MET
+                LETTERS FROM A SLEEPING HEART
               </span>
-              , is an upcoming emotional mystery about dreams, forgotten
+              , is an emotional mystery about dreams, forgotten
               memories, friendship, loss, and a love that may be closer than
               it seems.
             </p>
@@ -2026,7 +2036,7 @@ function NotFoundPage() {
 
 function BookPage() {
   const { slug } = useParams()
-  const book = books.find((item) => item.id === slug) || featuredBook
+  const book = books.find((item) => item.id === slug || item.legacySlugs?.includes(slug)) || featuredBook
   const isNovel = false
   const relatedCollection = publishedBooks
   const related = relatedCollection.find((item) => item.id !== book.id)
